@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <!-- Dark Circle Background with Emerald Ring -->
+  <circle cx="24" cy="24" r="21.5" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
+  
+  <!-- House Roof -->
+  <path d="M14 26 L24 16 L34 26" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- House Body -->
+  <path d="M17 25 V33 C17 33.6 17.4 34 18 34 H30 C30.6 34 31 33.6 31 33 V25" fill="#ffffff"/>
+  
+  <!-- Emerald Door -->
+  <rect x="22" y="27" width="4" height="7" rx="0.8" fill="#10b981"/>
+</svg>
