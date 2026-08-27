@@ -23,10 +23,10 @@
                 </div>
             </div>
 
-            {{-- Clean Minimalist Search & Filter Bar --}}
+            {{-- Clean Pill Search & Custom Designer Filter Bar --}}
             <div class="mb-14 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-3">
                 <!-- Search Capsule Input -->
-                <div class="w-full flex-1 relative flex items-center bg-white rounded-full border-2 border-slate-700 hover:border-black focus-within:border-black focus-within:ring-2 focus-within:ring-slate-900/10 px-5 py-2.5 shadow-xs transition-all">
+                <div class="w-full flex-1 relative flex items-center bg-white rounded-full border-2 border-slate-800 hover:border-black focus-within:border-black focus-within:ring-2 focus-within:ring-slate-900/10 px-5 py-2.5 shadow-xs transition-all">
                     <input type="text" id="search-input" oninput="applyFilters()" value="{{ request('q') }}" placeholder="Cari nomor kamar atau tipe..." 
                         class="w-full bg-transparent border-0 focus:ring-0 text-slate-900 text-sm font-semibold placeholder-slate-400 outline-none pr-8">
                     <div class="absolute right-4 text-slate-600 pointer-events-none">
@@ -37,35 +37,101 @@
                     </div>
                 </div>
 
-                <!-- Clean Native Capsule Filters -->
+                <!-- Hidden inputs for filter logic -->
+                <input type="hidden" id="status-filter" value="all">
+                <input type="hidden" id="price-filter" value="all">
+
+                <!-- Designer Floating Filter Dropdowns -->
                 <div class="w-full md:w-auto flex items-center gap-3 shrink-0">
-                    <!-- Status Filter -->
-                    <div class="relative flex-1 md:flex-initial">
-                        <select id="status-filter" onchange="applyFilters()" 
-                                class="w-full md:w-auto appearance-none bg-white border-2 border-slate-700 hover:border-black rounded-full pl-5 pr-10 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs cursor-pointer focus:outline-none focus:border-black">
-                            <option value="all">Semua Status</option>
-                            <option value="available">Tersedia</option>
-                            <option value="occupied">Terisi</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-700">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <!-- Status Custom Dropdown -->
+                    <div class="relative flex-1 md:flex-initial" x-data="{ open: false, selected: 'all', label: 'Semua' }" @click.outside="open = false">
+                        <button type="button" @click="open = !open" 
+                                class="w-full md:w-auto flex items-center justify-between gap-3 bg-white border-2 border-slate-800 hover:border-black rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs focus:outline-none select-none">
+                            <span class="flex items-center gap-1.5">
+                                <span class="text-slate-400 font-bold">Status:</span>
+                                <span x-text="label" class="text-slate-900 font-black">Semua</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200" :class="open ? 'rotate-180 text-slate-900' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
+                        </button>
+
+                        <!-- Floating Custom Menu -->
+                        <div x-show="open" x-cloak
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
+                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
+                             class="absolute right-0 mt-2 w-52 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-1.5 z-50">
+                            
+                            <button type="button" @click="selected = 'all'; label = 'Semua'; document.getElementById('status-filter').value = 'all'; applyFilters(); open = false;"
+                                :class="selected === 'all' ? 'bg-slate-900 text-white font-black' : 'text-slate-700 hover:bg-slate-100/80 font-bold'"
+                                class="w-full text-left px-3.5 py-2 text-xs rounded-xl flex items-center justify-between transition-colors">
+                                <span>Semua Status</span>
+                                <span x-show="selected === 'all'" class="text-[9px] uppercase font-black tracking-wider opacity-80">Dipilih</span>
+                            </button>
+                            
+                            <button type="button" @click="selected = 'available'; label = 'Tersedia'; document.getElementById('status-filter').value = 'available'; applyFilters(); open = false;"
+                                :class="selected === 'available' ? 'bg-slate-900 text-white font-black' : 'text-slate-700 hover:bg-slate-100/80 font-bold'"
+                                class="w-full text-left px-3.5 py-2 text-xs rounded-xl flex items-center justify-between transition-colors">
+                                <span>Tersedia (Ready)</span>
+                                <span x-show="selected === 'available'" class="text-[9px] uppercase font-black tracking-wider opacity-80">Dipilih</span>
+                            </button>
+
+                            <button type="button" @click="selected = 'occupied'; label = 'Terisi'; document.getElementById('status-filter').value = 'occupied'; applyFilters(); open = false;"
+                                :class="selected === 'occupied' ? 'bg-slate-900 text-white font-black' : 'text-slate-700 hover:bg-slate-100/80 font-bold'"
+                                class="w-full text-left px-3.5 py-2 text-xs rounded-xl flex items-center justify-between transition-colors">
+                                <span>Terisi (Full)</span>
+                                <span x-show="selected === 'occupied'" class="text-[9px] uppercase font-black tracking-wider opacity-80">Dipilih</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Price Filter -->
-                    <div class="relative flex-1 md:flex-initial">
-                        <select id="price-filter" onchange="applyFilters()" 
-                                class="w-full md:w-auto appearance-none bg-white border-2 border-slate-700 hover:border-black rounded-full pl-5 pr-10 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs cursor-pointer focus:outline-none focus:border-black">
-                            <option value="all">Semua Harga</option>
-                            <option value="low">&lt; Rp 1.500.000</option>
-                            <option value="high">&ge; Rp 1.500.000</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-700">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <!-- Price Custom Dropdown -->
+                    <div class="relative flex-1 md:flex-initial" x-data="{ open: false, selected: 'all', label: 'Semua' }" @click.outside="open = false">
+                        <button type="button" @click="open = !open" 
+                                class="w-full md:w-auto flex items-center justify-between gap-3 bg-white border-2 border-slate-800 hover:border-black rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs focus:outline-none select-none">
+                            <span class="flex items-center gap-1.5">
+                                <span class="text-slate-400 font-bold">Harga:</span>
+                                <span x-text="label" class="text-slate-900 font-black">Semua</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200" :class="open ? 'rotate-180 text-slate-900' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
+                        </button>
+
+                        <!-- Floating Custom Menu -->
+                        <div x-show="open" x-cloak
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
+                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
+                             class="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-1.5 z-50">
+                            
+                            <button type="button" @click="selected = 'all'; label = 'Semua'; document.getElementById('price-filter').value = 'all'; applyFilters(); open = false;"
+                                :class="selected === 'all' ? 'bg-slate-900 text-white font-black' : 'text-slate-700 hover:bg-slate-100/80 font-bold'"
+                                class="w-full text-left px-3.5 py-2 text-xs rounded-xl flex items-center justify-between transition-colors">
+                                <span>Semua Rentang Harga</span>
+                                <span x-show="selected === 'all'" class="text-[9px] uppercase font-black tracking-wider opacity-80">Dipilih</span>
+                            </button>
+                            
+                            <button type="button" @click="selected = 'low'; label = '< 1.5 Jt'; document.getElementById('price-filter').value = 'low'; applyFilters(); open = false;"
+                                :class="selected === 'low' ? 'bg-slate-900 text-white font-black' : 'text-slate-700 hover:bg-slate-100/80 font-bold'"
+                                class="w-full text-left px-3.5 py-2 text-xs rounded-xl flex items-center justify-between transition-colors">
+                                <span>&lt; Rp 1.500.000 <span class="opacity-70 text-[10px] font-normal block">Ekonomis</span></span>
+                                <span x-show="selected === 'low'" class="text-[9px] uppercase font-black tracking-wider opacity-80">Dipilih</span>
+                            </button>
+
+                            <button type="button" @click="selected = 'high'; label = '≥ 1.5 Jt'; document.getElementById('price-filter').value = 'high'; applyFilters(); open = false;"
+                                :class="selected === 'high' ? 'bg-slate-900 text-white font-black' : 'text-slate-700 hover:bg-slate-100/80 font-bold'"
+                                class="w-full text-left px-3.5 py-2 text-xs rounded-xl flex items-center justify-between transition-colors">
+                                <span>&ge; Rp 1.500.000 <span class="opacity-70 text-[10px] font-normal block">Deluxe / Suite</span></span>
+                                <span x-show="selected === 'high'" class="text-[9px] uppercase font-black tracking-wider opacity-80">Dipilih</span>
+                            </button>
                         </div>
                     </div>
                 </div>
