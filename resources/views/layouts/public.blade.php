@@ -53,7 +53,35 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="antialiased bg-white text-slate-900 font-sans selection:bg-slate-900 selection:text-white flex flex-col min-h-screen" x-data="{ mobileMenu: false }">
+<body class="antialiased bg-white text-slate-900 font-sans selection:bg-slate-900 selection:text-white flex flex-col min-h-screen" 
+      x-data="{ 
+          mobileMenu: false,
+          activeSection: window.location.hash ? window.location.hash.replace('#', '') : 'beranda',
+          init() {
+              const sections = ['beranda', 'keunggulan', 'tentang-kami'];
+              const updateActive = () => {
+                  const scrollPos = window.scrollY + 180;
+                  let current = 'beranda';
+                  for (let i = 0; i < sections.length; i++) {
+                      const el = document.getElementById(sections[i]);
+                      if (el) {
+                          const top = el.getBoundingClientRect().top + window.scrollY;
+                          if (scrollPos >= top) {
+                              current = sections[i];
+                          }
+                      }
+                  }
+                  this.activeSection = current;
+              };
+              window.addEventListener('scroll', updateActive, { passive: true });
+              window.addEventListener('hashchange', () => {
+                  if (window.location.hash) {
+                      this.activeSection = window.location.hash.replace('#', '');
+                  }
+              });
+              this.$nextTick(() => updateActive());
+          }
+      }">
 
     <!-- ============ NAVBAR ============ -->
     <nav class="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-slate-200/80 transition-all duration-300">
@@ -63,11 +91,26 @@
                 <img src="{{ asset('images/logo.png') }}" alt="Kosify Logo" class="h-12 w-auto object-contain">
             </a>
 
-            <!-- Center Links -->
-            <div class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider">
-                <a href="{{ route('home') }}#beranda" class="text-slate-900 hover:text-black transition-colors">Beranda</a>
-                <a href="{{ route('home') }}#keunggulan" class="text-slate-500 hover:text-slate-900 transition-colors">Keunggulan</a>
-                <a href="{{ route('home') }}#tentang-kami" class="text-slate-500 hover:text-slate-900 transition-colors">Tentang Kami</a>
+            <!-- Center Links with Dynamic ScrollSpy Active Indicator -->
+            <div class="hidden lg:flex items-center gap-8 text-xs font-black uppercase tracking-wider">
+                <a href="{{ route('home') }}#beranda" 
+                   @click="activeSection = 'beranda'"
+                   :class="activeSection === 'beranda' ? 'text-slate-900 border-b-2 border-slate-900 pb-0.5' : 'text-slate-400 hover:text-slate-700'"
+                   class="transition-all duration-200">
+                    Beranda
+                </a>
+                <a href="{{ route('home') }}#keunggulan" 
+                   @click="activeSection = 'keunggulan'"
+                   :class="activeSection === 'keunggulan' ? 'text-slate-900 border-b-2 border-slate-900 pb-0.5' : 'text-slate-400 hover:text-slate-700'"
+                   class="transition-all duration-200">
+                    Keunggulan
+                </a>
+                <a href="{{ route('home') }}#tentang-kami" 
+                   @click="activeSection = 'tentang-kami'"
+                   :class="activeSection === 'tentang-kami' ? 'text-slate-900 border-b-2 border-slate-900 pb-0.5' : 'text-slate-400 hover:text-slate-700'"
+                   class="transition-all duration-200">
+                    Tentang Kami
+                </a>
             </div>
 
             <!-- Desktop Right Actions -->
@@ -157,10 +200,29 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-3"
              class="absolute top-full left-0 right-0 z-50 lg:hidden border-t border-slate-200/60 bg-white/80 backdrop-blur-xl px-6 py-5 space-y-4 text-xs font-bold uppercase tracking-wider shadow-2xl rounded-b-3xl max-h-[calc(100vh-6rem)] overflow-y-auto">
-            <a href="{{ route('home') }}#beranda" class="block text-slate-800 hover:text-black py-1">Beranda</a>
-            <a href="{{ route('home') }}#keunggulan" class="block text-slate-800 hover:text-black py-1">Keunggulan</a>
-            <a href="{{ route('home') }}#tentang-kami" class="block text-slate-800 hover:text-black py-1">Tentang Kami</a>
-            <a href="{{ route('catalog.index') }}" class="block text-slate-800 hover:text-black py-1">Katalog Kamar</a>
+            <a href="{{ route('home') }}#beranda" 
+               @click="activeSection = 'beranda'; mobileMenu = false" 
+               :class="activeSection === 'beranda' ? 'text-slate-900 font-black bg-slate-100/90 px-3.5 py-2 rounded-xl' : 'text-slate-600 hover:text-slate-900 px-3.5 py-1.5'"
+               class="block transition-all">
+                Beranda
+            </a>
+            <a href="{{ route('home') }}#keunggulan" 
+               @click="activeSection = 'keunggulan'; mobileMenu = false" 
+               :class="activeSection === 'keunggulan' ? 'text-slate-900 font-black bg-slate-100/90 px-3.5 py-2 rounded-xl' : 'text-slate-600 hover:text-slate-900 px-3.5 py-1.5'"
+               class="block transition-all">
+                Keunggulan
+            </a>
+            <a href="{{ route('home') }}#tentang-kami" 
+               @click="activeSection = 'tentang-kami'; mobileMenu = false" 
+               :class="activeSection === 'tentang-kami' ? 'text-slate-900 font-black bg-slate-100/90 px-3.5 py-2 rounded-xl' : 'text-slate-600 hover:text-slate-900 px-3.5 py-1.5'"
+               class="block transition-all">
+                Tentang Kami
+            </a>
+            <a href="{{ route('catalog.index') }}" 
+               @click="mobileMenu = false"
+               class="block text-slate-600 hover:text-slate-900 px-3.5 py-1.5 transition-all">
+                Katalog Kamar
+            </a>
             
             <div class="pt-4 border-t border-slate-200/60 space-y-2">
                 @auth

@@ -144,8 +144,8 @@
         </div>
     </section>
 
-    <!-- ============ HOUSING HIGHLIGHTS ============ -->
-    <section id="promo" class="py-16 px-6">
+    <!-- ============ HOUSING HIGHLIGHTS & TENTANG KAMI ============ -->
+    <section id="tentang-kami" class="py-16 px-6">
         <div class="max-w-7xl mx-auto">
             <div class="mb-8">
                 <h2 class="text-3xl font-black text-slate-900 tracking-tight">Pilihan Hunian Sesuai Kebutuhan</h2>
