@@ -23,11 +23,11 @@
                 </div>
             </div>
 
-            {{-- Clean Pill Search & Custom Filter Bar (Gambar 2 Reference) --}}
-            <div class="mb-14 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-4">
+            {{-- Clean Minimalist Search & Filter Bar --}}
+            <div class="mb-14 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-3">
                 <!-- Search Capsule Input -->
                 <div class="w-full flex-1 relative flex items-center bg-white rounded-full border-2 border-slate-700 hover:border-black focus-within:border-black focus-within:ring-2 focus-within:ring-slate-900/10 px-5 py-2.5 shadow-xs transition-all">
-                    <input type="text" id="search-input" oninput="applyFilters()" value="{{ request('q') }}" placeholder="Search..." 
+                    <input type="text" id="search-input" oninput="applyFilters()" value="{{ request('q') }}" placeholder="Cari nomor kamar atau tipe..." 
                         class="w-full bg-transparent border-0 focus:ring-0 text-slate-900 text-sm font-semibold placeholder-slate-400 outline-none pr-8">
                     <div class="absolute right-4 text-slate-600 pointer-events-none">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -36,94 +36,36 @@
                         </svg>
                     </div>
                 </div>
-                
-                <!-- Hidden inputs for filter logic -->
-                <input type="hidden" id="status-filter" value="all">
-                <input type="hidden" id="price-filter" value="all">
 
-                <!-- Filter Custom UI Dropdowns -->
+                <!-- Clean Native Capsule Filters -->
                 <div class="w-full md:w-auto flex items-center gap-3 shrink-0">
-                    <!-- Status Custom Dropdown -->
-                    <div class="relative flex-1 md:flex-initial" x-data="{ open: false, selected: 'all', label: 'Semua Status' }" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="w-full md:w-auto flex items-center justify-between gap-3 bg-white border-2 border-slate-700 hover:border-black rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs focus:outline-none">
-                            <span class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full" :class="selected === 'available' ? 'bg-emerald-500' : (selected === 'occupied' ? 'bg-rose-500' : 'bg-slate-400')"></span>
-                                <span x-text="label">Semua Status</span>
-                            </span>
-                            <svg class="w-4 h-4 text-slate-600 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <!-- Status Filter -->
+                    <div class="relative flex-1 md:flex-initial">
+                        <select id="status-filter" onchange="applyFilters()" 
+                                class="w-full md:w-auto appearance-none bg-white border-2 border-slate-700 hover:border-black rounded-full pl-5 pr-10 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs cursor-pointer focus:outline-none focus:border-black">
+                            <option value="all">Semua Status</option>
+                            <option value="available">Tersedia</option>
+                            <option value="occupied">Terisi</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
-                        </button>
-
-                        <!-- Floating Custom Menu -->
-                        <div x-show="open" x-cloak
-                             x-transition:enter="transition ease-out duration-150"
-                             x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
-                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                             x-transition:leave="transition ease-in duration-100"
-                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-                             x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
-                             class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-40">
-                            <button type="button" @click="selected = 'all'; label = 'Semua Status'; document.getElementById('status-filter').value = 'all'; applyFilters(); open = false;"
-                                class="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center justify-between transition-colors">
-                                <span class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                                    Semua Status
-                                </span>
-                                <span x-show="selected === 'all'" class="text-slate-900 font-black">✓</span>
-                            </button>
-                            <button type="button" @click="selected = 'available'; label = 'Tersedia'; document.getElementById('status-filter').value = 'available'; applyFilters(); open = false;"
-                                class="w-full text-left px-4 py-2.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50 flex items-center justify-between transition-colors">
-                                <span class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                    Tersedia
-                                </span>
-                                <span x-show="selected === 'available'" class="text-emerald-700 font-black">✓</span>
-                            </button>
-                            <button type="button" @click="selected = 'occupied'; label = 'Terisi'; document.getElementById('status-filter').value = 'occupied'; applyFilters(); open = false;"
-                                class="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50 flex items-center justify-between transition-colors">
-                                <span class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                                    Terisi
-                                </span>
-                                <span x-show="selected === 'occupied'" class="text-slate-900 font-black">✓</span>
-                            </button>
                         </div>
                     </div>
 
-                    <!-- Price Custom Dropdown -->
-                    <div class="relative flex-1 md:flex-initial" x-data="{ open: false, selected: 'all', label: 'Semua Harga' }" @click.outside="open = false">
-                        <button type="button" @click="open = !open" class="w-full md:w-auto flex items-center justify-between gap-3 bg-white border-2 border-slate-700 hover:border-black rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs focus:outline-none">
-                            <span x-text="label">Semua Harga</span>
-                            <svg class="w-4 h-4 text-slate-600 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <!-- Price Filter -->
+                    <div class="relative flex-1 md:flex-initial">
+                        <select id="price-filter" onchange="applyFilters()" 
+                                class="w-full md:w-auto appearance-none bg-white border-2 border-slate-700 hover:border-black rounded-full pl-5 pr-10 py-2.5 text-xs font-black uppercase tracking-wider text-slate-800 transition-all shadow-xs cursor-pointer focus:outline-none focus:border-black">
+                            <option value="all">Semua Harga</option>
+                            <option value="low">&lt; Rp 1.500.000</option>
+                            <option value="high">&ge; Rp 1.500.000</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
-                        </button>
-
-                        <!-- Floating Custom Menu -->
-                        <div x-show="open" x-cloak
-                             x-transition:enter="transition ease-out duration-150"
-                             x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
-                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                             x-transition:leave="transition ease-in duration-100"
-                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-                             x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
-                             class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-40">
-                            <button type="button" @click="selected = 'all'; label = 'Semua Harga'; document.getElementById('price-filter').value = 'all'; applyFilters(); open = false;"
-                                class="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-between transition-colors">
-                                <span>Semua Harga</span>
-                                <span x-show="selected === 'all'" class="text-slate-900 font-black">✓</span>
-                            </button>
-                            <button type="button" @click="selected = 'low'; label = '< Rp 1.500.000'; document.getElementById('price-filter').value = 'low'; applyFilters(); open = false;"
-                                class="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-between transition-colors">
-                                <span>&lt; Rp 1.500.000 <span class="text-[10px] text-slate-400 font-normal block">Ekonomis</span></span>
-                                <span x-show="selected === 'low'" class="text-slate-900 font-black">✓</span>
-                            </button>
-                            <button type="button" @click="selected = 'high'; label = '≥ Rp 1.500.000'; document.getElementById('price-filter').value = 'high'; applyFilters(); open = false;"
-                                class="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-between transition-colors">
-                                <span>&ge; Rp 1.500.000 <span class="text-[10px] text-slate-400 font-normal block">Deluxe / VIP</span></span>
-                                <span x-show="selected === 'high'" class="text-slate-900 font-black">✓</span>
-                            </button>
                         </div>
                     </div>
                 </div>
