@@ -167,7 +167,7 @@
 
                 <!-- Housing Card 1: Mahasiswa -->
                 <div class="relative rounded-2xl overflow-hidden min-h-[280px] shadow-sm bg-slate-900">
-                    <img src="{{ asset('images/room_1.jpg') }}" class="absolute inset-0 w-full h-full object-cover" alt="Hunian Mahasiswa">
+                    <img src="{{ asset('images/rooms/room_102.jpg') }}" class="absolute inset-0 w-full h-full object-cover" alt="Hunian Mahasiswa">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
                     <div class="absolute bottom-6 left-6 right-6">
                         <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white px-2.5 py-0.5 rounded-md inline-block mb-2">Mahasiswa &amp; Pelajar</span>
@@ -178,7 +178,7 @@
 
                 <!-- Housing Card 2: Karyawan -->
                 <div class="relative rounded-2xl overflow-hidden min-h-[280px] shadow-sm bg-slate-900">
-                    <img src="{{ asset('images/room_2.jpg') }}" class="absolute inset-0 w-full h-full object-cover" alt="Hunian Karyawan">
+                    <img src="{{ asset('images/rooms/room_203.jpg') }}" class="absolute inset-0 w-full h-full object-cover" alt="Hunian Karyawan">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
                     <div class="absolute bottom-6 left-6 right-6">
                         <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-600 text-white px-2.5 py-0.5 rounded-md inline-block mb-2">Karyawan &amp; Pekerja</span>

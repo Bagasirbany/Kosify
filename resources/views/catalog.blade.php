@@ -17,7 +17,7 @@
                 </div>
                 <div class="w-full md:w-1/2 relative hidden md:block">
                     <div class="aspect-[4/3] w-full overflow-hidden shadow-2xl relative rounded-2xl border border-slate-200">
-                        <img src="{{ asset('images/deluxe_single_room.jpg') }}" alt="Interior Kos" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/rooms/room_201.jpg') }}" alt="Interior Kos" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-slate-900/10 mix-blend-multiply"></div>
                     </div>
                 </div>
