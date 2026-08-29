@@ -17,7 +17,7 @@
             </div>
 
             <div class="flex items-center gap-1.5">
-                <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Owner Kosify, saya ingin bertanya tentang kamar kos.') }}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider border border-emerald-200 transition-colors">
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $webSettings['owner_phone'] ?? '6281234567890') }}?text={{ urlencode('Halo Owner Kosify, saya ingin bertanya tentang kamar kos.') }}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider border border-emerald-200 transition-colors">
                     WA Owner
                 </a>
                 <button id="close-chat" type="button" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 text-xs font-bold transition-colors">

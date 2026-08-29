@@ -327,14 +327,14 @@
                     <div class="space-y-2.5 text-xs mb-6 font-medium">
                         <div>
                             <span class="block text-[10px] font-bold uppercase text-slate-400">WhatsApp / Telp:</span>
-                            <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Owner Kosify, saya ingin bertanya tentang kamar kos.') }}" target="_blank" class="font-bold text-slate-800 hover:text-emerald-700 transition-colors">
-                                +62 812 3456 7890
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $webSettings['owner_phone'] ?? '6281234567890') }}?text={{ urlencode('Halo Owner Kosify, saya ingin bertanya tentang kamar kos.') }}" target="_blank" class="font-bold text-slate-800 hover:text-emerald-700 transition-colors">
+                                {{ $webSettings['owner_phone'] ?? '+62 812-3456-7890' }}
                             </a>
                         </div>
                         <div>
                             <span class="block text-[10px] font-bold uppercase text-slate-400">Email Resmi:</span>
-                            <a href="mailto:owner@kosify.com" class="font-bold text-slate-800 hover:text-black transition-colors">
-                                owner@kosify.com
+                            <a href="mailto:{{ $webSettings['owner_email'] ?? 'owner@kosify.com' }}" class="font-bold text-slate-800 hover:text-black transition-colors">
+                                {{ $webSettings['owner_email'] ?? 'owner@kosify.com' }}
                             </a>
                         </div>
                     </div>

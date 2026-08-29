@@ -22,7 +22,8 @@ class RoomController extends Controller
         $room->load(['reservations', 'reviews.user']);
         $averageRating = round($room->reviews()->avg('rating') ?: 5.0, 1);
         $totalReviews = $room->reviews()->count();
-        return view('rooms.show', compact('room', 'averageRating', 'totalReviews'));
+        $settings = \App\Models\WebSetting::pluck('value', 'key')->toArray();
+        return view('rooms.show', compact('room', 'averageRating', 'totalReviews', 'settings'));
     }
 
     // User: Submit Review Kamar

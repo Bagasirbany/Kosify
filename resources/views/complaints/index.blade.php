@@ -9,7 +9,7 @@
                 <p class="text-xs text-slate-500 font-medium mt-0.5">Sampaikan keluhan fasilitas kamar atau area bersama (AC, kran, listrik, WiFi) untuk ditangani teknisi pengelola.</p>
             </div>
             
-            <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin Kosify, saya ' . auth()->user()->name . ' ingin lapor kendala mendesak...') }}" target="_blank" class="px-5 py-2.5 bg-slate-900 hover:bg-black text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all">
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $webSettings['owner_phone'] ?? '6281234567890') }}?text={{ urlencode('Halo Admin Kosify, saya ' . auth()->user()->name . ' ingin lapor kendala mendesak...') }}" target="_blank" class="px-5 py-2.5 bg-slate-900 hover:bg-black text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all">
                 CHAT WA OWNER &rarr;
             </a>
         </div>

@@ -97,7 +97,7 @@
                                             </div>
                                             
                                             <div class="mt-auto flex flex-wrap justify-end gap-2">
-                                                <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin Kosify, saya ' . auth()->user()->name . ' ingin konfirmasi mengenai sewa Kamar ' . ($booking->room->room_number ?? '')) }}" target="_blank" class="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-800 bg-slate-100 border border-slate-200 rounded-xl hover:bg-slate-200 transition-colors">
+                                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $webSettings['owner_phone'] ?? '6281234567890') }}?text={{ urlencode('Halo Admin Kosify, saya ' . auth()->user()->name . ' ingin konfirmasi mengenai sewa Kamar ' . ($booking->room->room_number ?? '')) }}" target="_blank" class="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-800 bg-slate-100 border border-slate-200 rounded-xl hover:bg-slate-200 transition-colors">
                                                     CHAT WA OWNER
                                                 </a>
 

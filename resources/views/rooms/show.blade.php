@@ -56,7 +56,7 @@
                                 <h1 class="text-3xl font-black text-slate-900 tracking-tight mb-2">Kamar {{ $room->room_number }}</h1>
                                 <p class="text-slate-500 font-medium flex items-center gap-2">
                                     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                    Jl. Kosify Pusat, Jakarta Selatan
+                                    {{ $settings['kos_address'] ?? 'Jl. Kosify Pusat No. 12, Jakarta Selatan' }}
                                 </p>
                             </div>
                             <div class="text-left md:text-right">
@@ -202,13 +202,13 @@
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-slate-700 mb-2">Tanggal Mulai</label>
-                                    <input type="date" name="start_date" id="start_date" required x-model="startDate" @change="calculate"
+                                    <input type="date" name="start_date" id="start_date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required x-model="startDate" @change="calculate"
                                            class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-slate-500 focus:border-slate-500 block p-3 font-medium transition-colors">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-bold text-slate-700 mb-2">Durasi (Bulan)</label>
-                                    <select name="duration" required x-model="duration" @change="calculate"
+                                    <select name="duration_months" required x-model="duration" @change="calculate"
                                             class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-slate-500 focus:border-slate-500 block p-3 font-medium cursor-pointer transition-colors">
                                         @for($i=1; $i<=12; $i++)
                                             <option value="{{ $i }}">{{ $i }} Bulan</option>
@@ -216,7 +216,7 @@
                                     </select>
                                 </div>
 
-                                <div x-show="total > 0" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 mt-6" style="display: none;">
+                                <div x-show="total > 0" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 mt-6">
                                     <div class="flex justify-between text-sm font-medium text-slate-600">
                                         <span>Rp {{ number_format($room->price_per_month, 0, ',', '.') }} x <span x-text="duration"></span> bulan</span>
                                         <span x-text="formatCurrency(subtotal)"></span>
@@ -261,12 +261,16 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('bookingForm', () => ({
-                startDate: '',
+                startDate: '{{ date('Y-m-d') }}',
                 duration: 1,
                 pricePerMonth: {{ $room->price_per_month }},
                 subtotal: 0,
                 serviceFee: 50000,
                 total: 0,
+                
+                init() {
+                    this.calculate();
+                },
                 
                 calculate() {
                     if(this.startDate && this.duration > 0) {

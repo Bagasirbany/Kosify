@@ -26,6 +26,9 @@ class ReservationController extends Controller
     // User: Submit Booking
     public function store(Request $request)
     {
+        $durationMonths = (int) $request->input('duration_months', $request->input('duration', 1));
+        $request->merge(['duration_months' => $durationMonths]);
+
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
             'start_date' => 'required|date|after_or_equal:today',
@@ -36,7 +39,7 @@ class ReservationController extends Controller
 
         // Hitung End Date (Tanggal Berakhir = Start Date + Duration Months)
         $requestedStartDate = \Carbon\Carbon::parse($request->start_date);
-        $requestedEndDate = $requestedStartDate->copy()->addMonths($request->duration_months);
+        $requestedEndDate = $requestedStartDate->copy()->addMonths($durationMonths);
 
         // Cek apakah ada reservasi aktif yang bertabrakan tanggalnya
         $overlappingReservation = Reservation::where('room_id', $request->room_id)
@@ -44,9 +47,9 @@ class ReservationController extends Controller
             ->get()
             ->filter(function ($reservation) use ($requestedStartDate, $requestedEndDate) {
                 $existingStart = \Carbon\Carbon::parse($reservation->start_date);
-                $existingEnd = $existingStart->copy()->addMonths($reservation->duration_months);
+                $existingEnd = $reservation->end_date ? \Carbon\Carbon::parse($reservation->end_date) : $existingStart->copy()->addMonths($reservation->duration_months ?: 1);
 
-                // Cek Overlap: (StartA <= EndB) and (EndA >= StartB)
+                // Cek Overlap: (StartA < EndB) and (EndA > StartB)
                 return ($requestedStartDate < $existingEnd) && ($requestedEndDate > $existingStart);
             })->first();
 
@@ -59,12 +62,16 @@ class ReservationController extends Controller
             return back()->with('error', 'Kamar saat ini tidak dapat disewa.');
         }
 
-        $reservation = new Reservation($request->all());
+        $reservation = new Reservation();
         $reservation->id = Str::uuid()->toString();
+        $reservation->room_id = $room->id;
         $reservation->user_id = Auth::id();
+        $reservation->start_date = $requestedStartDate->toDateString();
+        $reservation->end_date = $requestedEndDate->toDateString();
+        $reservation->duration_months = $durationMonths;
         $reservation->status = 'pending';
-        // Menyimpan total price
-        $reservation->total_price = $room->price_per_month * $request->duration_months;
+        // Total price: harga kamar per bulan x durasi + biaya layanan
+        $reservation->total_price = ($room->price_per_month * $durationMonths) + 50000;
         $reservation->save();
 
         return redirect()->route('bookings.my')->with('success', 'Booking berhasil dibuat. Silakan lakukan pembayaran.');
