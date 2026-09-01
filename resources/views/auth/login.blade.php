@@ -17,300 +17,355 @@
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        body { background: #f8f9fb; }
+        /* Page background — light like website */
+        body { background: #f0f2f5; min-height: 100vh; }
 
-        .left-panel {
+        /* Floating photo card */
+        .photo-card {
             background-image: url('{{ asset('images/rooms/room_201.jpg') }}');
             background-size: cover;
             background-position: center;
+            border-radius: 28px;
+            overflow: hidden;
             position: relative;
         }
 
-        .left-overlay {
+        .photo-card-overlay {
+            position: absolute;
+            inset: 0;
             background: linear-gradient(
-                to top,
-                rgba(10, 14, 20, 0.82) 0%,
-                rgba(10, 14, 20, 0.40) 55%,
-                rgba(10, 14, 20, 0.10) 100%
+                160deg,
+                rgba(8, 12, 20, 0.20) 0%,
+                rgba(8, 12, 20, 0.55) 60%,
+                rgba(8, 12, 20, 0.90) 100%
             );
         }
 
-        /* Input style — clean light */
-        .form-input {
-            background: #fff;
+        /* White form panel */
+        .form-panel {
+            background: #ffffff;
+        }
+
+        /* Clean input */
+        .clean-input {
             border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
             color: #0f172a;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 16px;
+            width: 100%;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .form-input::placeholder { color: #94a3b8; }
-        .form-input:focus {
+        .clean-input::placeholder { color: #94a3b8; font-weight: 400; }
+        .clean-input:focus {
             outline: none;
             border-color: #0f172a;
-            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 0 0 3px rgba(15,23,42,0.07);
         }
 
-        .btn-primary {
+        /* Pill input with icon */
+        .icon-input-wrap { position: relative; }
+        .icon-input-wrap .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cbd5e1;
+            pointer-events: none;
+        }
+        .icon-input-wrap .clean-input { padding-left: 42px; }
+
+        /* Submit button */
+        .btn-login {
             background: #0f172a;
             color: #fff;
+            border-radius: 12px;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            width: 100%;
             transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
         }
-        .btn-primary:hover {
+        .btn-login:hover {
             background: #020617;
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(15,23,42,0.18);
+            box-shadow: 0 8px 24px rgba(15,23,42,0.22);
         }
 
-        .tab-active {
-            color: #0f172a;
-            border-bottom: 2px solid #0f172a;
-            font-weight: 800;
-        }
-        .tab-inactive {
-            color: #94a3b8;
-            border-bottom: 2px solid transparent;
+        /* Secondary button */
+        .btn-secondary {
+            background: #fff;
+            color: #334155;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
             font-weight: 600;
+            width: 100%;
+            transition: border-color 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .tab-inactive:hover { color: #64748b; }
+        .btn-secondary:hover {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
 
+        /* Room info badge */
         .room-badge {
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 18px;
         }
 
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.35); }
-        .dot.active { background: #fff; width: 20px; border-radius: 3px; }
+        /* Slide dot */
+        .sdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: all 0.3s; }
+        .sdot.on { width: 22px; border-radius: 3px; background: #fff; }
 
-        .eye-btn { color: #94a3b8; transition: color 0.2s; }
-        .eye-btn:hover { color: #0f172a; }
+        /* Slide nav btn */
+        .slide-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.75);
+            transition: background 0.2s;
+        }
+        .slide-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
+            from { opacity: 0; transform: translateY(14px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .fade-up { animation: fadeUp 0.45s ease both; }
-        .d1 { animation-delay: 0.04s; }
-        .d2 { animation-delay: 0.10s; }
-        .d3 { animation-delay: 0.16s; }
-        .d4 { animation-delay: 0.22s; }
-        .d5 { animation-delay: 0.28s; }
+        .fu { animation: fadeUp 0.4s ease both; }
+        .d1{animation-delay:.04s} .d2{animation-delay:.09s} .d3{animation-delay:.14s}
+        .d4{animation-delay:.19s} .d5{animation-delay:.24s} .d6{animation-delay:.29s}
     </style>
 </head>
 
-<body class="min-h-screen flex">
+<body class="flex items-center justify-center p-4 md:p-6 lg:p-8">
 
-    {{-- ===== LEFT — Photo Panel ===== --}}
-    <div class="hidden lg:block lg:w-[48%] xl:w-[52%] left-panel flex-shrink-0">
-        <div class="absolute inset-0 left-overlay"></div>
+    {{-- ===== OUTER WRAPPER ===== --}}
+    <div class="w-full max-w-[1100px] flex items-stretch gap-0 min-h-[600px] lg:min-h-[680px] shadow-2xl rounded-[32px] overflow-hidden">
 
-        {{-- Top brand --}}
-        <div class="relative z-10 p-10">
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5">
-                <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-8 w-auto brightness-0 invert">
-                <span class="text-white font-black text-base tracking-tight">Kosify</span>
-            </a>
-        </div>
+        {{-- ===== LEFT — Floating Photo Card ===== --}}
+        <div class="hidden lg:block lg:w-[48%] xl:w-[46%] photo-card flex-shrink-0">
+            <div class="photo-card-overlay"></div>
 
-        {{-- Center headline --}}
-        <div class="relative z-10 absolute inset-0 flex flex-col justify-end p-10 pb-16">
-            <span class="text-white/55 text-xs font-bold uppercase tracking-widest mb-3">Featured Property</span>
-            <h2 class="text-white text-3xl xl:text-4xl font-black leading-tight tracking-tight mb-3">
-                Temukan Hunian<br>Terbaik Anda
-            </h2>
-            <p class="text-white/60 text-sm font-medium leading-relaxed mb-6 max-w-xs">
-                Kamar kos modern, fasilitas premium, lokasi strategis. Nyaman untuk mahasiswa dan profesional muda.
-            </p>
-
-            {{-- Badge --}}
-            <div class="room-badge rounded-2xl p-4 inline-flex items-center gap-4 self-start mb-6">
-                <div class="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="{{ asset('images/rooms/room_201.jpg') }}" class="w-full h-full object-cover" alt="">
-                </div>
-                <div>
-                    <p class="text-white font-bold text-sm">Kamar Suite Eksekutif</p>
-                    <p class="text-white/55 text-xs font-medium mt-0.5">Mulai Rp 2.100.000 / bulan</p>
-                </div>
-                <a href="{{ route('catalog.index') }}" class="ml-3 text-white/60 hover:text-white transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
+            {{-- Top nav row --}}
+            <div class="relative z-10 flex items-center justify-between p-7 pb-0">
+                <a href="{{ route('home') }}" class="flex items-center gap-2.5">
+                    <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-8 w-auto brightness-0 invert opacity-90">
+                    <span class="text-white font-black text-base tracking-tight">Kosify</span>
                 </a>
-            </div>
-
-            {{-- Dots --}}
-            <div class="flex items-center gap-2">
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-        </div>
-    </div>
-
-    {{-- ===== RIGHT — Form Panel ===== --}}
-    <div class="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-[#f8f9fb]">
-
-        {{-- Mobile logo --}}
-        <div class="lg:hidden text-center mb-8">
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2 justify-center">
-                <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-10 w-auto">
-                <span class="text-slate-900 font-black text-lg">Kosify</span>
-            </a>
-        </div>
-
-        {{-- Form card --}}
-        <div class="w-full max-w-[420px]">
-
-            {{-- Logo (desktop only) --}}
-            <div class="hidden lg:flex items-center gap-2.5 mb-8 fade-up d1">
-                <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-9 w-auto object-contain">
-            </div>
-
-            {{-- Tabs --}}
-            <div class="flex items-end gap-7 mb-8 fade-up d1">
-                <button class="tab-active text-base pb-2.5 transition-all">Masuk</button>
-                <a href="{{ route('register') }}" class="tab-inactive text-base pb-2.5 transition-all">Daftar</a>
-            </div>
-
-            {{-- Headline --}}
-            <div class="mb-7 fade-up d2">
-                <h1 class="text-2xl font-black text-slate-900 tracking-tight">Selamat Datang Kembali 👋</h1>
-                <p class="text-slate-500 text-sm font-medium mt-1">Masukkan akun Anda untuk melanjutkan.</p>
-            </div>
-
-            {{-- Errors --}}
-            @if ($errors->any())
-                <div class="mb-5 px-4 py-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
-                    <ul class="space-y-1 list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('catalog.index') }}"
+                       class="text-xs text-white/70 font-semibold hover:text-white transition-colors">
+                        Katalog
+                    </a>
+                    <a href="{{ route('register') }}"
+                       class="text-xs text-white font-bold bg-white/15 hover:bg-white/25 border border-white/20 px-4 py-1.5 rounded-full transition-all">
+                        Daftar
+                    </a>
                 </div>
-            @endif
+            </div>
 
-            @if (session('status'))
-                <div class="mb-5 px-4 py-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                    {{ session('status') }}
+            {{-- Center — spacer --}}
+            <div class="relative z-10 flex-1 flex flex-col justify-end p-7 h-full" style="min-height: calc(100% - 80px)">
+
+                {{-- Headline --}}
+                <div class="mb-6">
+                    <span class="text-white/50 text-[10px] font-bold uppercase tracking-widest block mb-3">Featured Property</span>
+                    <h2 class="text-white text-3xl xl:text-[38px] font-black leading-[1.15] tracking-tight mb-3">
+                        Temukan Hunian<br>Terbaik Anda
+                    </h2>
+                    <p class="text-white/60 text-sm font-medium leading-relaxed max-w-[260px]">
+                        Kamar kos modern, fasilitas premium, lokasi strategis. Nyaman untuk mahasiswa & profesional.
+                    </p>
                 </div>
-            @endif
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-4" data-turbo="false">
-                @csrf
-
-                {{-- Email --}}
-                <div class="fade-up d3">
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Email</label>
-                    <div class="relative">
-                        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}"
-                               required autofocus autocomplete="username"
-                               placeholder="nama@email.com"
-                               class="form-input w-full rounded-xl pl-10 pr-4 py-3 text-sm font-medium">
+                {{-- Room badge + slide controls --}}
+                <div class="room-badge p-4 flex items-center gap-4 mb-5">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                        <img src="{{ asset('images/rooms/room_201.jpg') }}" class="w-full h-full object-cover" alt="">
                     </div>
-                </div>
-
-                {{-- Password --}}
-                <div class="fade-up d4">
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}"
-                               class="text-xs text-slate-500 hover:text-slate-900 font-semibold underline underline-offset-2 transition-colors">
-                                Lupa password?
-                            </a>
-                        @endif
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white font-bold text-sm truncate">Kamar Suite Eksekutif</p>
+                        <p class="text-white/55 text-xs font-medium mt-0.5">Mulai Rp 2.100.000 / bulan</p>
                     </div>
-                    <div class="relative">
-                        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button class="slide-btn">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
                             </svg>
-                        </div>
-                        <input id="password" type="password" name="password"
-                               required autocomplete="current-password"
-                               placeholder="Masukkan kata sandi"
-                               class="form-input w-full rounded-xl pl-10 pr-12 py-3 text-sm font-medium">
-                        <button type="button" onclick="togglePass('password', this)"
-                                class="eye-btn absolute right-3.5 top-1/2 -translate-y-1/2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </button>
+                        <button class="slide-btn">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                             </svg>
                         </button>
                     </div>
                 </div>
 
-                {{-- Remember --}}
-                <div class="flex items-center gap-2.5 fade-up d4">
-                    <input id="remember_me" type="checkbox" name="remember"
-                           class="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
-                    <label for="remember_me" class="text-xs text-slate-600 font-semibold cursor-pointer select-none">
-                        Ingat saya di perangkat ini
-                    </label>
+                {{-- Dots --}}
+                <div class="flex items-center gap-2">
+                    <div class="sdot on"></div>
+                    <div class="sdot"></div>
+                    <div class="sdot"></div>
                 </div>
-
-                {{-- Submit --}}
-                <div class="pt-1 fade-up d5">
-                    <button type="submit" class="btn-primary w-full py-3.5 rounded-xl font-bold text-sm tracking-wide">
-                        Masuk ke Akun →
-                    </button>
-                </div>
-            </form>
-
-            {{-- Divider --}}
-            <div class="flex items-center gap-3 my-5 fade-up d5">
-                <div class="flex-1 h-px bg-slate-200"></div>
-                <span class="text-slate-400 text-xs font-semibold">atau</span>
-                <div class="flex-1 h-px bg-slate-200"></div>
             </div>
-
-            {{-- Browse catalog shortcut --}}
-            <a href="{{ route('catalog.index') }}"
-               class="fade-up d5 w-full flex items-center justify-center gap-2.5 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-900 transition-all text-sm font-semibold">
-                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                Lihat Katalog Kamar
-            </a>
-
-            {{-- Register link --}}
-            <p class="text-center text-sm text-slate-500 mt-6 font-medium fade-up d5">
-                Belum punya akun?
-                <a href="{{ route('register') }}" class="text-slate-900 font-bold hover:underline underline-offset-2 ml-1">
-                    Daftar Sekarang
-                </a>
-            </p>
-
         </div>
 
-        {{-- Footer --}}
-        <p class="text-slate-400 text-xs font-medium mt-10 text-center">
-            &copy; 2026 Kosify Indonesia. All rights reserved.
-        </p>
-    </div>
+        {{-- ===== RIGHT — White Form Panel ===== --}}
+        <div class="form-panel flex-1 flex flex-col">
+
+            {{-- Top right branding (desktop) --}}
+            <div class="hidden lg:flex items-center justify-between px-10 pt-8 pb-0">
+                <span class="text-slate-900 font-black text-lg tracking-tight">KOSIFY</span>
+                <a href="{{ route('catalog.index') }}"
+                   class="text-xs font-bold text-slate-500 hover:text-slate-900 uppercase tracking-wider transition-colors">
+                    Lihat Katalog →
+                </a>
+            </div>
+
+            {{-- Mobile logo --}}
+            <div class="lg:hidden flex items-center justify-center pt-8 pb-0">
+                <a href="{{ route('home') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-9 w-auto">
+                    <span class="text-slate-900 font-black text-lg">Kosify</span>
+                </a>
+            </div>
+
+            {{-- Form center --}}
+            <div class="flex-1 flex flex-col justify-center px-8 md:px-12 lg:px-14 xl:px-16 py-8">
+
+                {{-- Headline --}}
+                <div class="mb-7 fu d1">
+                    <h1 class="text-3xl xl:text-4xl font-black text-slate-900 tracking-tight leading-tight mb-2">
+                        Halo, Selamat<br>Datang 👋
+                    </h1>
+                    <p class="text-slate-500 text-sm font-medium">Masuk ke akun Kosify Anda</p>
+                </div>
+
+                {{-- Errors --}}
+                @if ($errors->any())
+                    <div class="mb-5 px-4 py-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+                        <ul class="space-y-1 list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if (session('status'))
+                    <div class="mb-5 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login') }}" class="space-y-4" data-turbo="false">
+                    @csrf
+
+                    {{-- Email --}}
+                    <div class="fu d2">
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}"
+                               required autofocus autocomplete="username"
+                               placeholder="nama@email.com"
+                               class="clean-input">
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="fu d3">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Password</label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}"
+                                   class="text-xs font-semibold text-slate-400 hover:text-slate-900 underline underline-offset-2 transition-colors">
+                                    Lupa password?
+                                </a>
+                            @endif
+                        </div>
+                        <div class="relative">
+                            <input id="password" type="password" name="password"
+                                   required autocomplete="current-password"
+                                   placeholder="••••••••"
+                                   class="clean-input pr-12">
+                            <button type="button" onclick="togglePass('password', this)"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Remember --}}
+                    <div class="flex items-center gap-2.5 fu d3">
+                        <input id="remember_me" type="checkbox" name="remember"
+                               class="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
+                        <label for="remember_me" class="text-xs text-slate-500 font-medium cursor-pointer select-none">
+                            Ingat saya di perangkat ini
+                        </label>
+                    </div>
+
+                    {{-- Submit --}}
+                    <div class="fu d4">
+                        <button type="submit" class="btn-login">
+                            Masuk ke Akun
+                        </button>
+                    </div>
+                </form>
+
+                {{-- Divider --}}
+                <div class="flex items-center gap-3 my-5 fu d5">
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                    <span class="text-slate-400 text-xs font-semibold">atau</span>
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                </div>
+
+                {{-- Catalog shortcut --}}
+                <button onclick="window.location='{{ route('catalog.index') }}'" class="btn-secondary fu d5">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    Lihat Katalog Kamar
+                </button>
+
+                {{-- Register --}}
+                <p class="text-center text-sm text-slate-500 mt-6 font-medium fu d6">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="text-slate-900 font-bold hover:underline underline-offset-2 ml-1">
+                        Daftar Sekarang
+                    </a>
+                </p>
+            </div>
+
+            {{-- Bottom copyright --}}
+            <p class="text-center text-xs text-slate-400 font-medium pb-6">
+                &copy; 2026 Kosify Indonesia
+            </p>
+        </div>
+
+    </div><!-- /outer wrapper -->
 
     <script>
         function togglePass(id, btn) {
             const input = document.getElementById(id);
             if (!input) return;
-            const eyeOpen = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>`;
-            const eyeOff = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-            </svg>`;
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.innerHTML = eyeOff;
-            } else {
-                input.type = 'password';
-                btn.innerHTML = eyeOpen;
-            }
+            const eyeOpen = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>`;
+            const eyeOff = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>`;
+            if (input.type === 'password') { input.type = 'text'; btn.innerHTML = eyeOff; }
+            else { input.type = 'password'; btn.innerHTML = eyeOpen; }
         }
     </script>
 </body>
