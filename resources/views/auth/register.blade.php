@@ -1,237 +1,326 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Daftar Akun Baru - Kosify</title>
+    <title>Daftar - Kosify</title>
 
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-circle.png') }}?v=2">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        html, body { height: 100%; overflow: hidden; }
 
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+        .page-bg {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0d0c14 0%, #1a1520 35%, #12101c 70%, #0a0810 100%);
+            padding: 24px;
         }
 
-        .bg-light-cinematic {
-            background-image: url('{{ asset("images/auth_light_bg.jpg") }}');
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 960px;
+            height: min(92vh, 620px);
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        }
+
+        /* ── LEFT PANEL ── */
+        .panel-left {
+            width: 45%;
+            flex-shrink: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .photo-card {
+            position: absolute;
+            inset: 10px;
+            border-radius: 18px;
+            overflow: hidden;
+            background-image: url('{{ asset("images/rooms/room_102.jpg") }}');
             background-size: cover;
             background-position: center;
         }
+        .photo-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(170deg,
+                rgba(8,6,18,0.20) 0%,
+                rgba(8,6,18,0.15) 30%,
+                rgba(8,6,18,0.55) 65%,
+                rgba(8,6,18,0.92) 100%
+            );
+        }
+        .photo-card > * { position: relative; z-index: 2; }
 
-        .glass-card-light {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.6);
+        .left-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 22px;
+        }
+        .left-top-title { color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+        .left-top-actions { display: flex; align-items: center; gap: 10px; }
+        .left-top-actions a.text-link {
+            color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 500;
+            text-decoration: none; transition: color 0.2s;
+        }
+        .left-top-actions a.text-link:hover { color: #fff; }
+        .left-top-actions a.pill-btn {
+            color: #fff; font-size: 11px; font-weight: 600;
+            padding: 5px 16px; border: 1.5px solid rgba(255,255,255,0.45);
+            border-radius: 20px; text-decoration: none; transition: all 0.2s;
+        }
+        .left-top-actions a.pill-btn:hover {
+            background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.7);
         }
 
-        .input-clean {
-            width: 100%;
+        .left-spacer { flex: 1; }
+
+        .left-bottom { padding: 0 22px 20px; }
+        .artist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .artist-avatar {
+            width: 38px; height: 38px; border-radius: 50%; overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0;
+        }
+        .artist-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .artist-name { color: #fff; font-weight: 600; font-size: 12.5px; line-height: 1.2; }
+        .artist-role { color: rgba(255,255,255,0.55); font-weight: 400; font-size: 11px; margin-top: 1px; }
+
+        .nav-arrows { display: flex; align-items: center; gap: 6px; }
+        .nav-arrow {
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.35); background: transparent;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
+        .nav-arrow svg { width: 13px; height: 13px; }
+
+        /* ── RIGHT PANEL ── */
+        .panel-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            color: #0f172a;
-            font-size: 12.5px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .input-clean::placeholder {
-            color: #94a3b8;
-            font-weight: 400;
-        }
-        .input-clean:focus {
-            outline: none;
-            background: #ffffff;
-            border-color: #0f172a;
-            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
         }
 
-        .btn-primary-dark {
-            width: 100%;
-            background: #0f172a;
-            color: #ffffff;
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 11px;
-            font-size: 13px;
-            letter-spacing: 0.01em;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+        .right-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 40px 0;
         }
-        .btn-primary-dark:hover {
-            background: #020617;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
+        .brand-text {
+            font-weight: 800; font-size: 14px; color: #1a1a2e;
+            letter-spacing: 0.06em; text-decoration: none;
+        }
+        .lang-pill {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 11px; font-weight: 500; color: #64748b;
+            border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 12px;
+        }
+        .lang-pill svg { width: 12px; height: 12px; }
+
+        .form-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+        }
+
+        .greeting-title {
+            font-size: 28px; font-weight: 800; color: #1a1a2e;
+            letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 6px;
+        }
+        .greeting-sub { font-size: 13px; font-weight: 400; color: #94a3b8; margin-bottom: 24px; }
+
+        .field-group { margin-bottom: 10px; }
+        .field-label {
+            display: block; font-size: 11px; font-weight: 500;
+            color: #64748b; margin-bottom: 4px;
+        }
+        .field-input {
+            width: 100%; border: none; border-bottom: 1.5px solid #e2e8f0;
+            padding: 8px 2px; font-size: 13px; font-weight: 400;
+            color: #1e293b; background: transparent; outline: none;
+            transition: border-color 0.2s;
+        }
+        .field-input::placeholder { color: #94a3b8; }
+        .field-input:focus { border-color: #1a1a2e; }
+
+        .btn-register {
+            width: 100%; padding: 11px; border: none; border-radius: 10px;
+            background: #ef4444; color: #fff; font-size: 13.5px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(239,68,68,0.25);
+            margin-top: 18px;
+        }
+        .btn-register:hover {
+            background: #dc2626; transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(239,68,68,0.35);
+        }
+
+        .signin-text {
+            text-align: center; font-size: 12px; font-weight: 400;
+            color: #64748b; margin-top: 16px;
+        }
+        .signin-text a { color: #ef4444; font-weight: 600; text-decoration: none; }
+        .signin-text a:hover { text-decoration: underline; }
+
+        .social-footer {
+            display: flex; align-items: center; justify-content: center;
+            gap: 18px; padding: 16px 40px 22px;
+        }
+        .social-footer a { color: #94a3b8; transition: color 0.2s; }
+        .social-footer a:hover { color: #1e293b; }
+        .social-footer svg { width: 16px; height: 16px; }
+
+        @media (max-width: 768px) {
+            .page-bg { padding: 12px; background: #f0f2f5; }
+            .login-container {
+                flex-direction: column; height: auto; max-height: 98vh;
+                border-radius: 20px; overflow-y: auto;
+            }
+            .panel-left { display: none; }
+            .form-area { padding: 0 28px; }
+            .right-top { padding: 20px 28px 0; }
+            .social-footer { padding: 12px 28px 18px; }
         }
     </style>
 </head>
 
-<body class="h-full bg-light-cinematic flex items-center justify-center p-4 relative">
+<body>
+<div class="page-bg">
+    <div class="login-container">
 
-    {{-- Soft Ambient Overlay --}}
-    <div class="absolute inset-0 bg-slate-900/15 backdrop-blur-[2px] z-0"></div>
-
-    {{-- Frosted Glass Light Card --}}
-    <div class="relative z-10 w-full max-w-[390px] glass-card-light rounded-[28px] p-6 sm:p-7 flex flex-col my-auto">
-
-        {{-- Top Brand Logo --}}
-        <div class="flex justify-center mb-3">
-            <a href="{{ route('home') }}" class="group">
-                <div class="w-10 h-10 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-6 w-auto object-contain">
+        <!-- ═══════ LEFT PANEL ═══════ -->
+        <div class="panel-left">
+            <div class="photo-card">
+                <div class="left-top">
+                    <span class="left-top-title">Selected Works</span>
+                    <div class="left-top-actions">
+                        <a href="{{ route('login') }}" class="text-link">Sign In</a>
+                        <a href="{{ route('catalog.index') }}" class="pill-btn">Join Us</a>
+                    </div>
                 </div>
-            </a>
+                <div class="left-spacer"></div>
+                <div class="left-bottom">
+                    <div class="artist-row">
+                        <div class="artist-avatar">
+                            <img src="{{ asset('images/rooms/room_102.jpg') }}" alt="Kosify">
+                        </div>
+                        <div>
+                            <div class="artist-name">Kosify.id</div>
+                            <div class="artist-role">Student Comfort</div>
+                        </div>
+                    </div>
+                    <div class="nav-arrows">
+                        <button class="nav-arrow" type="button" aria-label="Previous">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button class="nav-arrow" type="button" aria-label="Next">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        {{-- Tab Navigation --}}
-        <div class="flex items-center justify-center gap-10 border-b border-slate-200/80 mb-4 pb-0.5">
-            <a href="{{ route('login') }}" class="text-slate-400 hover:text-slate-700 font-semibold text-sm pb-2.5 border-b-2 border-transparent transition-all">
-                Sign In
-            </a>
-            <button type="button" class="text-slate-900 font-extrabold text-sm pb-2.5 border-b-2 border-slate-900 transition-all">
-                Sign Up
-            </button>
+        <!-- ═══════ RIGHT PANEL ═══════ -->
+        <div class="panel-right">
+
+            <div class="right-top">
+                <a href="{{ route('home') }}" class="brand-text">KOSIFY</a>
+                <div class="lang-pill">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                    </svg>
+                    EN
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:10px;height:10px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="form-area">
+
+                <h1 class="greeting-title">Buat Akun Baru 🏡</h1>
+                <p class="greeting-sub">Bergabung dengan komunitas Kosify</p>
+
+                @if ($errors->any())
+                    <div style="margin-bottom:14px;padding:10px 14px;border-radius:10px;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:12px;font-weight:500">
+                        @foreach ($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('register') }}" data-turbo="false">
+                    @csrf
+
+                    <div class="field-group">
+                        <label class="field-label">Nama Lengkap</label>
+                        <input type="text" name="name" value="{{ old('name') }}" required autofocus placeholder="Nama lengkap Anda" class="field-input">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">WhatsApp</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="081234567890" class="field-input">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required placeholder="you@example.com" class="field-input">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Password</label>
+                        <input type="password" name="password" required placeholder="Minimal 8 karakter" class="field-input">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" required placeholder="Ulangi password" class="field-input">
+                    </div>
+
+                    <button type="submit" class="btn-register">Sign Up</button>
+                </form>
+
+                <p class="signin-text">
+                    Already have an account?
+                    <a href="{{ route('login') }}">Sign in</a>
+                </p>
+            </div>
+
+            <div class="social-footer">
+                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
+                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            </div>
+
         </div>
-
-        {{-- Error Alerts --}}
-        @if ($errors->any())
-            <div class="mb-3 px-3.5 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
-
-        {{-- Form --}}
-        <form method="POST" action="{{ route('register') }}" class="space-y-2.5" data-turbo="false">
-            @csrf
-
-            {{-- Full Name --}}
-            <div>
-                <label for="name" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Nama Lengkap</label>
-                <div class="relative">
-                    <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                    </div>
-                    <input id="name" type="text" name="name" value="{{ old('name') }}"
-                           required autofocus autocomplete="name"
-                           placeholder="Nama Lengkap"
-                           class="input-clean pl-10 pr-3.5 py-2">
-                </div>
-            </div>
-
-            {{-- Phone / WA --}}
-            <div>
-                <label for="phone" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">WhatsApp</label>
-                <div class="relative">
-                    <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                        </svg>
-                    </div>
-                    <input id="phone" type="text" name="phone" value="{{ old('phone') }}"
-                           required placeholder="081234567890"
-                           class="input-clean pl-10 pr-3.5 py-2">
-                </div>
-            </div>
-
-            {{-- Email --}}
-            <div>
-                <label for="email" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Email</label>
-                <div class="relative">
-                    <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}"
-                           required placeholder="you@example.com"
-                           class="input-clean pl-10 pr-3.5 py-2">
-                </div>
-            </div>
-
-            {{-- Password --}}
-            <div>
-                <label for="password" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Password</label>
-                <div class="relative">
-                    <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                        </svg>
-                    </div>
-                    <input id="password" type="password" name="password"
-                           required placeholder="••••••••"
-                           class="input-clean pl-10 pr-10 py-2">
-                    <button type="button" onclick="togglePass('password', this)" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            {{-- Confirm Password --}}
-            <div>
-                <label for="password_confirmation" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Konfirmasi Password</label>
-                <div class="relative">
-                    <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </div>
-                    <input id="password_confirmation" type="password" name="password_confirmation"
-                           required placeholder="••••••••"
-                           class="input-clean pl-10 pr-10 py-2">
-                    <button type="button" onclick="togglePass('password_confirmation', this)" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            {{-- Primary Submit Button --}}
-            <div class="pt-1.5">
-                <button type="submit" class="btn-primary-dark">
-                    Sign Up
-                </button>
-            </div>
-        </form>
-
-        {{-- Footer link --}}
-        <p class="text-center text-xs text-slate-500 mt-3.5 font-medium">
-            Already have an account? 
-            <a href="{{ route('login') }}" class="text-slate-900 font-bold hover:underline ml-0.5">Sign in</a>
-        </p>
 
     </div>
-
-    <script>
-        function togglePass(id, btn) {
-            const input = document.getElementById(id);
-            if (!input) return;
-            const open = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
-            const off = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
-            const svg = btn.querySelector('svg');
-            if (input.type === 'password') { input.type = 'text'; svg.innerHTML = off; }
-            else { input.type = 'password'; svg.innerHTML = open; }
-        }
-    </script>
+</div>
 </body>
 </html>
