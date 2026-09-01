@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,219 +16,192 @@
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        /* Lock viewport — NO scroll */
         html, body {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
-            background: #f0f1f4;
-        }
-
-        .page-wrap {
-            width: 100%; height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        /* The outer container card */
-        .outer-card {
-            display: flex;
-            width: 100%;
-            max-width: 1060px;
-            height: min(92vh, 640px);
-            background: #fff;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
-        }
-
-        /* Left photo panel — inside the card, with its own rounding */
-        .photo-side {
-            width: 46%;
-            flex-shrink: 0;
-            position: relative;
-            margin: 14px;
-            margin-right: 0;
-            border-radius: 20px;
-            overflow: hidden;
-            background-image: url('{{ asset("images/rooms/room_201.jpg") }}');
-            background-size: cover;
-            background-position: center;
-        }
-        .photo-side::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(160deg, rgba(6,10,18,0.10) 0%, rgba(6,10,18,0.50) 55%, rgba(6,10,18,0.88) 100%);
-        }
-        .photo-side > * { position: relative; z-index: 2; }
-
-        /* Right form side */
-        .form-side {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            height: 100%;
+            margin: 0;
             padding: 0;
             overflow: hidden;
+            background: #eef1f5;
         }
 
-        /* Minimal clean input — bottom-border style like reference */
         .ref-input {
             width: 100%;
-            border: none;
-            border-bottom: 1.5px solid #e2e8f0;
-            background: transparent;
-            color: #0f172a;
-            font-size: 14px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font-size: 13.5px;
             font-weight: 500;
-            padding: 12px 0;
-            outline: none;
-            transition: border-color 0.2s;
+            color: #0f172a;
+            transition: all 0.2s ease;
         }
-        .ref-input::placeholder { color: #94a3b8; font-weight: 400; }
-        .ref-input:focus { border-color: #0f172a; }
+        .ref-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        .ref-input:focus {
+            outline: none;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+            background: #ffffff;
+        }
 
-        /* Submit button — solid slate like website */
-        .btn-submit {
+        .btn-primary-dark {
             width: 100%;
             background: #0f172a;
-            color: #fff;
-            border: none;
+            color: #ffffff;
             border-radius: 12px;
-            padding: 14px;
+            padding: 12px 20px;
             font-size: 14px;
             font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            letter-spacing: 0.01em;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
         }
-        .btn-submit:hover {
+        .btn-primary-dark:hover {
             background: #020617;
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(15,23,42,0.18);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.22);
         }
 
-        /* Secondary outline button */
-        .btn-outline {
+        .btn-secondary-clean {
             width: 100%;
-            background: #fff;
-            color: #475569;
-            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
             border-radius: 12px;
-            padding: 12px;
-            font-size: 14px;
+            padding: 10px 18px;
+            font-size: 13.5px;
             font-weight: 600;
-            cursor: pointer;
-            transition: border-color 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: all 0.2s ease;
         }
-        .btn-outline:hover { border-color: #94a3b8; }
+        .btn-secondary-clean:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+        }
 
-        /* Slide arrow buttons */
         .arrow-btn {
-            width: 34px; height: 34px; border-radius: 50%;
-            border: 1.5px solid rgba(255,255,255,0.30);
-            background: rgba(255,255,255,0.06);
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.80);
-            transition: background 0.2s;
-            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            transition: all 0.2s ease;
         }
-        .arrow-btn:hover { background: rgba(255,255,255,0.18); }
+        .arrow-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.05);
+        }
 
-        /* Mobile: single column */
-        @media (max-width: 1023px) {
-            .page-wrap { padding: 16px; }
-            .outer-card {
-                flex-direction: column;
-                height: auto;
-                max-height: 96vh;
-                overflow-y: auto;
-            }
-            .photo-side { display: none; }
-            .form-side { flex: 1; }
+        .social-link {
+            color: #94a3b8;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .social-link:hover {
+            color: #0f172a;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 
-<body>
-<div class="page-wrap">
-    <div class="outer-card">
+<body class="h-full flex items-center justify-center p-3 md:p-6 lg:p-8">
 
-        {{-- ===== LEFT: Photo Card (inset rounded) ===== --}}
-        <div class="photo-side hidden lg:flex flex-col">
+    {{-- Main Container Card --}}
+    <div class="w-full max-w-[1020px] h-[92vh] max-h-[620px] bg-white rounded-[32px] shadow-2xl shadow-slate-300/60 border border-slate-100 flex overflow-hidden">
 
-            {{-- Top bar --}}
-            <div class="flex items-center justify-between p-6 pb-0">
-                <span class="text-white font-black text-sm tracking-tight">Kosify</span>
-                <div class="flex items-center gap-2">
-                    <a href="{{ route('register') }}" class="text-[11px] text-white/70 font-semibold hover:text-white transition-colors">Daftar</a>
-                    <a href="{{ route('catalog.index') }}" class="text-[11px] text-white font-bold bg-white/15 hover:bg-white/25 border border-white/25 px-3.5 py-1.5 rounded-full transition-all">Katalog</a>
-                </div>
-            </div>
+        {{-- LEFT PANEL: Inset Photo Showcase --}}
+        <div class="hidden lg:flex lg:w-[46%] p-3.5 flex-shrink-0">
+            <div class="w-full h-full rounded-[24px] overflow-hidden relative flex flex-col justify-between p-6 bg-cover bg-center"
+                 style="background-image: url('{{ asset('images/rooms/room_201.jpg') }}');">
+                
+                {{-- Cinematic Dark Gradient Overlay --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/85 z-0"></div>
 
-            {{-- Spacer --}}
-            <div class="flex-1"></div>
-
-            {{-- Bottom info --}}
-            <div class="p-6 pt-0">
-                {{-- Author badge --}}
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/25 flex-shrink-0">
-                        <img src="{{ asset('images/rooms/room_301.jpg') }}" class="w-full h-full object-cover" alt="">
-                    </div>
-                    <div>
-                        <p class="text-white font-bold text-sm leading-tight">Suite Eksekutif</p>
-                        <p class="text-white/50 text-xs font-medium">Rp 2.100.000 / bulan</p>
+                {{-- Left Header Navigation --}}
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="text-white font-bold text-sm tracking-wide">Selected Rooms</span>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('register') }}" class="text-xs text-white/80 font-medium hover:text-white transition-colors px-2">Daftar</a>
+                        <a href="{{ route('catalog.index') }}" class="text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 backdrop-blur-md px-3.5 py-1 rounded-full transition-all">
+                            Katalog
+                        </a>
                     </div>
                 </div>
 
-                {{-- Slide arrows --}}
-                <div class="flex items-center gap-2">
-                    <button class="arrow-btn">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    <button class="arrow-btn">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
+                {{-- Left Bottom Profile / Room Pill & Arrows --}}
+                <div class="relative z-10 flex items-center justify-between">
+                    {{-- Room Pill --}}
+                    <div class="flex items-center gap-3 bg-black/30 backdrop-blur-md border border-white/15 rounded-full py-1.5 px-2.5 pr-4">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border border-white/40 flex-shrink-0">
+                            <img src="{{ asset('images/rooms/room_201.jpg') }}" class="w-full h-full object-cover" alt="Suite">
+                        </div>
+                        <div class="leading-none">
+                            <p class="text-white font-bold text-xs">Kamar Suite Eksekutif</p>
+                            <p class="text-white/60 text-[10px] mt-0.5 font-medium">Kosify Premium</p>
+                        </div>
+                    </div>
+
+                    {{-- Slider Arrows --}}
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" class="arrow-btn" aria-label="Previous">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="arrow-btn" aria-label="Next">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </div>
 
-        {{-- ===== RIGHT: Form Side ===== --}}
-        <div class="form-side">
+        {{-- RIGHT PANEL: Clean Minimal Form --}}
+        <div class="flex-1 flex flex-col justify-between p-6 sm:p-8 lg:p-10 lg:pl-8">
 
-            {{-- Top right nav --}}
-            <div class="flex items-center justify-between px-10 pt-7">
+            {{-- Top Branding Header --}}
+            <div class="flex items-center justify-between">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
                     <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-7 w-auto">
-                    <span class="text-slate-900 font-black text-sm tracking-tight hidden lg:inline">KOSIFY</span>
+                    <span class="text-slate-900 font-black text-base tracking-tight">KOSIFY</span>
                 </a>
-                <a href="{{ route('catalog.index') }}" class="text-[11px] font-bold text-slate-500 hover:text-slate-900 uppercase tracking-wider transition-colors">
-                    Katalog →
-                </a>
+
+                {{-- Language / Status Pill --}}
+                <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-slate-100/80 border border-slate-200/80 rounded-full px-3 py-1">
+                    <span>🇮🇩 IDN</span>
+                </div>
             </div>
 
-            {{-- Centered form content --}}
-            <div class="flex-1 flex flex-col justify-center px-10 lg:px-14 xl:px-16">
+            {{-- Center Form Content --}}
+            <div class="w-full max-w-[360px] mx-auto my-auto py-2">
+                
+                {{-- Headings --}}
+                <div class="text-center mb-5">
+                    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                        Hi Pencari Kos 👋
+                    </h1>
+                    <p class="text-slate-500 text-xs sm:text-sm font-medium mt-1">
+                        Selamat datang kembali di Kosify
+                    </p>
+                </div>
 
-                {{-- Heading --}}
-                <h1 class="text-[32px] xl:text-[38px] font-black text-slate-900 tracking-tight leading-[1.1] mb-1.5">
-                    Halo, Selamat<br>Datang 👋
-                </h1>
-                <p class="text-slate-500 text-sm font-medium mb-8">Masuk ke akun Kosify Anda</p>
-
-                {{-- Errors --}}
+                {{-- Alerts --}}
                 @if ($errors->any())
-                    <div class="mb-5 px-4 py-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+                    <div class="mb-3 px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
                         @foreach ($errors->all() as $error)
                             <p>{{ $error }}</p>
                         @endforeach
@@ -236,29 +209,29 @@
                 @endif
 
                 @if (session('status'))
-                    <div class="mb-5 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                    <div class="mb-3 px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium">
                         {{ session('status') }}
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}" data-turbo="false">
+                <form method="POST" action="{{ route('login') }}" class="space-y-3" data-turbo="false">
                     @csrf
 
-                    {{-- Email --}}
-                    <div class="mb-1">
+                    {{-- Email Input --}}
+                    <div>
                         <input id="email" type="email" name="email" value="{{ old('email') }}"
                                required autofocus autocomplete="username"
                                placeholder="Email"
                                class="ref-input">
                     </div>
 
-                    {{-- Password --}}
-                    <div class="mb-1 relative">
+                    {{-- Password Input --}}
+                    <div class="relative">
                         <input id="password" type="password" name="password"
                                required autocomplete="current-password"
                                placeholder="Password"
                                class="ref-input pr-10">
-                        <button type="button" onclick="togglePass()" class="absolute right-0 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                        <button type="button" onclick="togglePass()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
                             <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -266,65 +239,80 @@
                         </button>
                     </div>
 
-                    {{-- Forgot password --}}
-                    <div class="flex justify-end mb-6">
+                    {{-- Forgot Password --}}
+                    <div class="flex justify-end pt-0.5">
                         @if (Route::has('password.request'))
                             <a href="{{ route('password.request') }}"
-                               class="text-xs font-semibold text-slate-400 hover:text-slate-900 transition-colors">
+                               class="text-[11px] font-semibold text-rose-500 hover:text-rose-600 transition-colors">
                                 Lupa password?
                             </a>
                         @endif
                     </div>
 
                     {{-- Divider --}}
-                    <div class="flex items-center gap-3 mb-5">
+                    <div class="flex items-center gap-3 py-1">
                         <div class="flex-1 h-px bg-slate-200"></div>
-                        <span class="text-slate-400 text-xs font-medium">atau</span>
+                        <span class="text-slate-400 text-[11px] font-medium">atau</span>
                         <div class="flex-1 h-px bg-slate-200"></div>
                     </div>
 
-                    {{-- Catalog button --}}
-                    <button type="button" onclick="window.location='{{ route('catalog.index') }}'" class="btn-outline mb-5">
+                    {{-- Alternative / Catalog Button --}}
+                    <a href="{{ route('catalog.index') }}" class="btn-secondary-clean">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
-                        Lihat Katalog Kamar
-                    </button>
+                        <span>Eksplor Katalog Kamar</span>
+                    </a>
 
-                    {{-- Login submit --}}
-                    <button type="submit" class="btn-submit">
+                    {{-- Primary Submit Button --}}
+                    <button type="submit" class="btn-primary-dark mt-1">
                         Masuk ke Akun
                     </button>
                 </form>
 
-                {{-- Register --}}
-                <p class="text-center text-sm text-slate-500 mt-5 font-medium">
+                {{-- Sign up link --}}
+                <p class="text-center text-xs text-slate-500 mt-4 font-medium">
                     Belum punya akun?
-                    <a href="{{ route('register') }}" class="text-slate-900 font-bold hover:underline underline-offset-2">Daftar</a>
+                    <a href="{{ route('register') }}" class="text-slate-900 font-bold hover:underline ml-1">Daftar sekarang</a>
                 </p>
+
             </div>
 
-            {{-- Footer --}}
-            <div class="px-10 pb-5 pt-2 text-center">
-                <p class="text-[11px] text-slate-400 font-medium">&copy; 2026 Kosify Indonesia</p>
+            {{-- Footer Social Icons --}}
+            <div class="flex items-center justify-center gap-5 pt-2">
+                <a href="{{ route('home') }}" class="social-link" title="Beranda">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.09961L1 12H4V21H10V14H14V21H20V12H23L12 2.09961Z"/>
+                    </svg>
+                </a>
+                <a href="{{ route('catalog.index') }}" class="social-link" title="Katalog">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
+                    </svg>
+                </a>
+                <a href="https://wa.me/6281234567890" target="_blank" class="social-link" title="WhatsApp">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.04 3.67Z"/>
+                    </svg>
+                </a>
             </div>
+
         </div>
 
     </div>
-</div>
 
-<script>
-    function togglePass() {
-        const pw = document.getElementById('password');
-        const icon = document.getElementById('eye-icon');
-        if (pw.type === 'password') {
-            pw.type = 'text';
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
-        } else {
-            pw.type = 'password';
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+    <script>
+        function togglePass() {
+            const pw = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+            if (pw.type === 'password') {
+                pw.type = 'text';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+            } else {
+                pw.type = 'password';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
