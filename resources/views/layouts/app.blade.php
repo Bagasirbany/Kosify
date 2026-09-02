@@ -20,6 +20,7 @@
 
         <!-- Scripts -->
         <script src="https://cdn.tailwindcss.com"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     
         <!-- Fast Navigation & Premium Animations -->
@@ -61,9 +62,9 @@
             <div class="flex-1 h-full overflow-y-auto flex flex-col relative w-full lg:w-auto">
                 
                 <!-- Topbar (Text-First) -->
-                <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shrink-0">
+                <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-30 shrink-0">
                     <div class="flex items-center gap-4">
-                        <!-- Mobile Sidebar Toggle (Gambar 2 Reference) -->
+                        <!-- Mobile Sidebar Toggle -->
                         <button @click="sidebarOpen = true" type="button" aria-label="Buka Menu Sidebar" class="lg:hidden p-2 rounded-xl text-slate-800 hover:bg-slate-100 focus:outline-none transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
                                 <line x1="4" y1="6" x2="20" y2="6"></line>
@@ -77,16 +78,36 @@
                         </div>
                     </div>
                     
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <!-- Quick Link to Main Website / Catalog -->
+                        <a href="{{ route('catalog.index') }}" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                            <span>Lihat Katalog</span>
+                        </a>
+
+                        <!-- Direct Logout Button -->
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('topbar-logout-form').submit();" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200/60 rounded-xl transition-all shadow-xs">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            <span>Keluar</span>
+                        </a>
+                        <form id="topbar-logout-form" method="POST" action="{{ route('logout') }}" class="hidden" data-turbo="false">
+                            @csrf
+                        </form>
+
+                        <!-- Profile Dropdown -->
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-1.5 hover:bg-slate-50 transition-colors text-xs font-bold text-slate-800">
+                            <button @click="open = !open" @click.outside="open = false" class="flex items-center gap-2 border border-slate-200 rounded-xl px-2.5 sm:px-3 py-1.5 hover:bg-slate-50 transition-colors text-xs font-bold text-slate-800">
                                 <span class="w-6 h-6 rounded-md bg-slate-900 text-white flex items-center justify-center text-[10px] font-black">
                                     {{ strtoupper(substr(auth()->user()->name ?? 'AD', 0, 2)) }}
                                 </span>
                                 <span class="hidden sm:inline font-bold uppercase tracking-wider">{{ auth()->user()->name ?? 'Admin' }}</span>
                                 <span class="text-[10px] text-slate-400">▼</span>
                             </button>
-                            <div x-show="open" style="display: none;" class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 text-xs z-50">
+                            <div x-show="open" x-transition.origin.top.right style="display: none;" class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 text-xs z-50">
                                 <div class="px-4 py-2 border-b border-slate-100">
                                     <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block">ROLE PENGGUNA</span>
                                     <p class="font-bold text-slate-900 uppercase tracking-wider">{{ auth()->user()->role ?? 'ADMIN' }}</p>
@@ -96,12 +117,16 @@
                                     Profil Saya
                                 </a>
 
+                                <a href="{{ route('catalog.index') }}" class="block px-4 py-2 font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
+                                    Katalog Kamar &rarr;
+                                </a>
+
                                 <a href="/" class="block px-4 py-2 font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
                                     Ke Halaman Beranda &rarr;
                                 </a>
 
                                 <hr class="my-1 border-slate-100">
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" data-turbo="false">
                                     @csrf
                                     <button type="submit" class="w-full text-left px-4 py-2 font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50">
                                         KELUAR [ LOGOUT ]

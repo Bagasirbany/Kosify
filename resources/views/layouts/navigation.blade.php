@@ -97,10 +97,17 @@
         </a>
     </nav>
     
-    <div class="border-t border-slate-100 p-3 shrink-0">
-        <a href="{{ route('home') }}" target="_blank" class="flex items-center justify-center gap-2 w-full py-2.5 px-3 text-center rounded-xl bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-700 text-xs font-bold uppercase tracking-wider transition-all">
+    <div class="border-t border-slate-100 p-3 shrink-0 space-y-1.5">
+        <a href="{{ route('catalog.index') }}" class="flex items-center justify-center gap-2 w-full py-2.5 px-3 text-center rounded-xl bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-700 text-xs font-bold uppercase tracking-wider transition-all">
             <span>Website Utama</span>
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+
+        <a href="{{ route('logout') }}" class="flex items-center justify-center gap-2 w-full py-2 px-3 text-center rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px] font-bold uppercase tracking-wider transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            <span>Keluar (Logout)</span>
         </a>
     </div>
 </div>
