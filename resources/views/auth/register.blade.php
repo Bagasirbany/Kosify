@@ -23,7 +23,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: url('{{ asset("images/window_view_bg.jpg") }}');
+            background-image: url('{{ asset("images/auth_window_mountains.jpg") }}');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -33,9 +33,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
+            background: rgba(0, 0, 0, 0.08);
             z-index: 1;
         }
 
@@ -46,13 +44,13 @@
             width: 100%;
             max-width: 960px;
             height: min(92vh, 620px);
-            background: rgba(255, 255, 255, 0.56);
-            backdrop-filter: blur(28px) saturate(160%);
-            -webkit-backdrop-filter: blur(28px) saturate(160%);
-            border: 1px solid rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.65);
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.3);
         }
 
         /* ── LEFT PANEL (45%) ── */
@@ -69,10 +67,10 @@
             inset: 10px;
             border-radius: 18px;
             overflow: hidden;
-            background-image: url('{{ asset("images/rooms/room_102.jpg") }}');
+            background-image: url('{{ asset("images/left_card_room.jpg") }}');
             background-size: cover;
             background-position: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
         .photo-card::after {
             content: '';
@@ -80,9 +78,9 @@
             inset: 0;
             background: linear-gradient(170deg,
                 rgba(8,6,18,0.25) 0%,
-                rgba(8,6,18,0.15) 30%,
-                rgba(8,6,18,0.50) 65%,
-                rgba(8,6,18,0.88) 100%
+                rgba(8,6,18,0.10) 30%,
+                rgba(8,6,18,0.45) 65%,
+                rgba(8,6,18,0.85) 100%
             );
         }
         .photo-card > * { position: relative; z-index: 2; }
@@ -116,7 +114,7 @@
         .artist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .artist-avatar {
             width: 38px; height: 38px; border-radius: 50%; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.5); flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.6); flex-shrink: 0;
             box-shadow: 0 4px 10px rgba(0,0,0,0.25);
         }
         .artist-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -126,11 +124,11 @@
         .nav-arrows { display: flex; align-items: center; gap: 6px; }
         .nav-arrow {
             width: 30px; height: 30px; border-radius: 50%;
-            border: 1.5px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.12);
             backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
             color: rgba(255,255,255,0.9); cursor: pointer; transition: all 0.2s;
         }
-        .nav-arrow:hover { background: rgba(255,255,255,0.25); border-color: #fff; }
+        .nav-arrow:hover { background: rgba(255,255,255,0.3); border-color: #fff; }
         .nav-arrow svg { width: 13px; height: 13px; }
 
         /* ── RIGHT PANEL (55%) ── */
@@ -153,8 +151,8 @@
         }
         .lang-pill {
             display: flex; align-items: center; gap: 4px;
-            font-size: 11px; font-weight: 600; color: #334155;
-            background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(203, 213, 225, 0.8);
+            font-size: 11px; font-weight: 600; color: #1e293b;
+            background: rgba(255, 255, 255, 0.65); border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 20px; padding: 4px 12px; backdrop-filter: blur(4px);
         }
         .lang-pill svg { width: 12px; height: 12px; }
@@ -171,20 +169,20 @@
             font-size: 28px; font-weight: 800; color: #0f172a;
             letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 4px;
         }
-        .greeting-sub { font-size: 13px; font-weight: 500; color: #64748b; margin-bottom: 22px; }
+        .greeting-sub { font-size: 13px; font-weight: 500; color: #475569; margin-bottom: 22px; }
 
         .field-group { margin-bottom: 10px; }
         .field-label {
             display: block; font-size: 11px; font-weight: 600;
-            color: #475569; margin-bottom: 3px;
+            color: #334155; margin-bottom: 3px;
         }
         .field-input {
-            width: 100%; border: none; border-bottom: 1.5px solid rgba(15, 23, 42, 0.2);
+            width: 100%; border: none; border-bottom: 1.5px solid rgba(15, 23, 42, 0.25);
             padding: 8px 2px; font-size: 13px; font-weight: 500;
             color: #0f172a; background: transparent; outline: none;
             transition: border-color 0.2s;
         }
-        .field-input::placeholder { color: #94a3b8; }
+        .field-input::placeholder { color: #64748b; }
         .field-input:focus { border-color: #0f172a; }
 
         .btn-register {
@@ -201,7 +199,7 @@
 
         .signin-text {
             text-align: center; font-size: 12px; font-weight: 500;
-            color: #475569; margin-top: 14px;
+            color: #334155; margin-top: 14px;
         }
         .signin-text a { color: #ef4444; font-weight: 700; text-decoration: none; margin-left: 2px; }
         .signin-text a:hover { text-decoration: underline; }
@@ -210,7 +208,7 @@
             display: flex; align-items: center; justify-content: center;
             gap: 18px; padding: 14px 40px 20px;
         }
-        .social-footer a { color: #64748b; transition: color 0.2s, transform 0.2s; }
+        .social-footer a { color: #475569; transition: color 0.2s, transform 0.2s; }
         .social-footer a:hover { color: #0f172a; transform: translateY(-1px); }
         .social-footer svg { width: 16px; height: 16px; }
 
@@ -246,11 +244,11 @@
                 <div class="left-bottom">
                     <div class="artist-row">
                         <div class="artist-avatar">
-                            <img src="{{ asset('images/rooms/room_102.jpg') }}" alt="Kosify">
+                            <img src="{{ asset('images/left_card_room.jpg') }}" alt="Kosify">
                         </div>
                         <div>
                             <div class="artist-name">Kosify.id</div>
-                            <div class="artist-role">Student Comfort</div>
+                            <div class="artist-role">Premium Living</div>
                         </div>
                     </div>
                     <div class="nav-arrows">
@@ -288,7 +286,7 @@
                 <p class="greeting-sub">Bergabung dengan komunitas Kosify</p>
 
                 @if ($errors->any())
-                    <div style="margin-bottom:14px;padding:10px 14px;border-radius:10px;background:rgba(254, 242, 242, 0.9);border:1px solid #fecaca;color:#dc2626;font-size:12px;font-weight:600">
+                    <div style="margin-bottom:14px;padding:10px 14px;border-radius:10px;background:rgba(254, 242, 242, 0.95);border:1px solid #fecaca;color:#dc2626;font-size:12px;font-weight:600">
                         @foreach ($errors->all() as $error)
                             <p>{{ $error }}</p>
                         @endforeach
