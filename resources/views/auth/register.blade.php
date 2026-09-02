@@ -23,22 +23,39 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0d0c14 0%, #1a1520 35%, #12101c 70%, #0a0810 100%);
+            background-image: url('{{ asset("images/window_view_bg.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            position: relative;
             padding: 24px;
+        }
+        .page-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            z-index: 1;
         }
 
         .login-container {
+            position: relative;
+            z-index: 2;
             display: flex;
             width: 100%;
             max-width: 960px;
             height: min(92vh, 620px);
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.56);
+            backdrop-filter: blur(28px) saturate(160%);
+            -webkit-backdrop-filter: blur(28px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.75);
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.4);
         }
 
-        /* ── LEFT PANEL ── */
+        /* ── LEFT PANEL (45%) ── */
         .panel-left {
             width: 45%;
             flex-shrink: 0;
@@ -55,16 +72,17 @@
             background-image: url('{{ asset("images/rooms/room_102.jpg") }}');
             background-size: cover;
             background-position: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         .photo-card::after {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(170deg,
-                rgba(8,6,18,0.20) 0%,
+                rgba(8,6,18,0.25) 0%,
                 rgba(8,6,18,0.15) 30%,
-                rgba(8,6,18,0.55) 65%,
-                rgba(8,6,18,0.92) 100%
+                rgba(8,6,18,0.50) 65%,
+                rgba(8,6,18,0.88) 100%
             );
         }
         .photo-card > * { position: relative; z-index: 2; }
@@ -75,20 +93,21 @@
             justify-content: space-between;
             padding: 20px 22px;
         }
-        .left-top-title { color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+        .left-top-title { color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
         .left-top-actions { display: flex; align-items: center; gap: 10px; }
         .left-top-actions a.text-link {
-            color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 500;
+            color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 500;
             text-decoration: none; transition: color 0.2s;
         }
         .left-top-actions a.text-link:hover { color: #fff; }
         .left-top-actions a.pill-btn {
             color: #fff; font-size: 11px; font-weight: 600;
-            padding: 5px 16px; border: 1.5px solid rgba(255,255,255,0.45);
+            padding: 5px 16px; border: 1.5px solid rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
             border-radius: 20px; text-decoration: none; transition: all 0.2s;
         }
         .left-top-actions a.pill-btn:hover {
-            background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,1);
         }
 
         .left-spacer { flex: 1; }
@@ -97,28 +116,29 @@
         .artist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .artist-avatar {
             width: 38px; height: 38px; border-radius: 50%; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.5); flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
         }
         .artist-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .artist-name { color: #fff; font-weight: 600; font-size: 12.5px; line-height: 1.2; }
-        .artist-role { color: rgba(255,255,255,0.55); font-weight: 400; font-size: 11px; margin-top: 1px; }
+        .artist-name { color: #fff; font-weight: 700; font-size: 12.5px; line-height: 1.2; }
+        .artist-role { color: rgba(255,255,255,0.75); font-weight: 400; font-size: 11px; margin-top: 1px; }
 
         .nav-arrows { display: flex; align-items: center; gap: 6px; }
         .nav-arrow {
             width: 30px; height: 30px; border-radius: 50%;
-            border: 1.5px solid rgba(255,255,255,0.35); background: transparent;
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s;
+            border: 1.5px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.9); cursor: pointer; transition: all 0.2s;
         }
-        .nav-arrow:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
+        .nav-arrow:hover { background: rgba(255,255,255,0.25); border-color: #fff; }
         .nav-arrow svg { width: 13px; height: 13px; }
 
-        /* ── RIGHT PANEL ── */
+        /* ── RIGHT PANEL (55%) ── */
         .panel-right {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #ffffff;
+            background: transparent;
         }
 
         .right-top {
@@ -128,13 +148,14 @@
             padding: 28px 40px 0;
         }
         .brand-text {
-            font-weight: 800; font-size: 14px; color: #1a1a2e;
-            letter-spacing: 0.06em; text-decoration: none;
+            font-weight: 900; font-size: 14.5px; color: #0f172a;
+            letter-spacing: 0.08em; text-decoration: none;
         }
         .lang-pill {
             display: flex; align-items: center; gap: 4px;
-            font-size: 11px; font-weight: 500; color: #64748b;
-            border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 12px;
+            font-size: 11px; font-weight: 600; color: #334155;
+            background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(203, 213, 225, 0.8);
+            border-radius: 20px; padding: 4px 12px; backdrop-filter: blur(4px);
         }
         .lang-pill svg { width: 12px; height: 12px; }
 
@@ -147,54 +168,54 @@
         }
 
         .greeting-title {
-            font-size: 28px; font-weight: 800; color: #1a1a2e;
-            letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 6px;
+            font-size: 28px; font-weight: 800; color: #0f172a;
+            letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 4px;
         }
-        .greeting-sub { font-size: 13px; font-weight: 400; color: #94a3b8; margin-bottom: 24px; }
+        .greeting-sub { font-size: 13px; font-weight: 500; color: #64748b; margin-bottom: 22px; }
 
         .field-group { margin-bottom: 10px; }
         .field-label {
-            display: block; font-size: 11px; font-weight: 500;
-            color: #64748b; margin-bottom: 4px;
+            display: block; font-size: 11px; font-weight: 600;
+            color: #475569; margin-bottom: 3px;
         }
         .field-input {
-            width: 100%; border: none; border-bottom: 1.5px solid #e2e8f0;
-            padding: 8px 2px; font-size: 13px; font-weight: 400;
-            color: #1e293b; background: transparent; outline: none;
+            width: 100%; border: none; border-bottom: 1.5px solid rgba(15, 23, 42, 0.2);
+            padding: 8px 2px; font-size: 13px; font-weight: 500;
+            color: #0f172a; background: transparent; outline: none;
             transition: border-color 0.2s;
         }
         .field-input::placeholder { color: #94a3b8; }
-        .field-input:focus { border-color: #1a1a2e; }
+        .field-input:focus { border-color: #0f172a; }
 
         .btn-register {
-            width: 100%; padding: 11px; border: none; border-radius: 10px;
+            width: 100%; padding: 11.5px; border: none; border-radius: 12px;
             background: #ef4444; color: #fff; font-size: 13.5px; font-weight: 700;
             cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(239,68,68,0.25);
-            margin-top: 18px;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+            margin-top: 16px;
         }
         .btn-register:hover {
             background: #dc2626; transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(239,68,68,0.35);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
         }
 
         .signin-text {
-            text-align: center; font-size: 12px; font-weight: 400;
-            color: #64748b; margin-top: 16px;
+            text-align: center; font-size: 12px; font-weight: 500;
+            color: #475569; margin-top: 14px;
         }
-        .signin-text a { color: #ef4444; font-weight: 600; text-decoration: none; }
+        .signin-text a { color: #ef4444; font-weight: 700; text-decoration: none; margin-left: 2px; }
         .signin-text a:hover { text-decoration: underline; }
 
         .social-footer {
             display: flex; align-items: center; justify-content: center;
-            gap: 18px; padding: 16px 40px 22px;
+            gap: 18px; padding: 14px 40px 20px;
         }
-        .social-footer a { color: #94a3b8; transition: color 0.2s; }
-        .social-footer a:hover { color: #1e293b; }
+        .social-footer a { color: #64748b; transition: color 0.2s, transform 0.2s; }
+        .social-footer a:hover { color: #0f172a; transform: translateY(-1px); }
         .social-footer svg { width: 16px; height: 16px; }
 
         @media (max-width: 768px) {
-            .page-bg { padding: 12px; background: #f0f2f5; }
+            .page-bg { padding: 12px; }
             .login-container {
                 flex-direction: column; height: auto; max-height: 98vh;
                 border-radius: 20px; overflow-y: auto;
@@ -267,7 +288,7 @@
                 <p class="greeting-sub">Bergabung dengan komunitas Kosify</p>
 
                 @if ($errors->any())
-                    <div style="margin-bottom:14px;padding:10px 14px;border-radius:10px;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:12px;font-weight:500">
+                    <div style="margin-bottom:14px;padding:10px 14px;border-radius:10px;background:rgba(254, 242, 242, 0.9);border:1px solid #fecaca;color:#dc2626;font-size:12px;font-weight:600">
                         @foreach ($errors->all() as $error)
                             <p>{{ $error }}</p>
                         @endforeach
