@@ -17,21 +17,11 @@ class GoogleAuthController extends Controller
      */
     public function redirectToGoogle(): RedirectResponse
     {
-        $clientId = config('services.google.client_id');
-        $clientSecret = config('services.google.client_secret');
-
-        if (empty($clientId) || empty($clientSecret) || $clientId === 'isi_client_id_disini') {
-            return redirect()->route('login')->with(
-                'status',
-                'Untuk mengaktifkan login Google, isi GOOGLE_CLIENT_ID & GOOGLE_CLIENT_SECRET di file .env Anda terlebih dahulu.'
-            );
-        }
-
         try {
             return Socialite::driver('google')->redirect();
         } catch (\Throwable $e) {
             return redirect()->route('login')->withErrors([
-                'email' => 'Gagal menghubungkan ke server Google: ' . $e->getMessage(),
+                'email' => 'Gagal membuka login Google: ' . $e->getMessage(),
             ]);
         }
     }
