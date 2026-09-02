@@ -36,12 +36,13 @@ class GoogleAuthController extends Controller
             ->orWhere('email', 'bagasirbany@kosify.com')
             ->first();
 
+        // Set/update role to penyewa and log in
         if (!$user) {
             $user = User::create([
                 'name' => 'Bagas Irbany',
                 'email' => $googleEmail,
                 'phone' => '081234567890',
-                'role' => 'admin',
+                'role' => 'penyewa',
                 'password' => Hash::make(Str::random(24)),
                 'email_verified_at' => now(),
             ]);
@@ -49,11 +50,8 @@ class GoogleAuthController extends Controller
 
         Auth::login($user, true);
 
-        if ($user->role === 'admin') {
-            return redirect()->intended('/dashboard')->with('status', 'Berhasil masuk dengan Akun Google (' . $user->name . ' - ' . $user->email . ')! 🎉');
-        }
-
-        return redirect()->intended('/catalog')->with('status', 'Berhasil masuk dengan Akun Google (' . $user->name . ' - ' . $user->email . ')! 🎉');
+        // Selalu arahkan ke Katalog Kamar Kos Publik
+        return redirect('/catalog')->with('status', 'Selamat datang di Kosify, ' . $user->name . '! Silakan pilih kamar kos impian Anda.');
     }
 
     /**
@@ -81,11 +79,8 @@ class GoogleAuthController extends Controller
                 Auth::login($user, true);
             }
 
-            if ($user->role === 'admin') {
-                return redirect()->intended('/dashboard');
-            }
-
-            return redirect()->intended('/catalog');
+            // Selalu arahkan ke Katalog Kamar Kos
+            return redirect('/catalog')->with('status', 'Selamat datang di Kosify, ' . $user->name . '!');
         } catch (\Throwable $e) {
             return redirect()->route('login')->withErrors([
                 'email' => 'Proses autentikasi Google dibatalkan atau terjadi kendala: ' . $e->getMessage(),
