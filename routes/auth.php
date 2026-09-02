@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
@@ -16,9 +17,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    Route::get('auth/google', function () {
-        return redirect()->route('login')->with('status', 'Fitur Login dengan Google siap digunakan setelah Google Client ID & Secret dihubungkan.');
-    })->name('login.google');
+    // Google OAuth Routes
+    Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('login.google');
+    Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
 });
 
 Route::middleware('auth')->group(function () {
