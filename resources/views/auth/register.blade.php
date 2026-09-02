@@ -97,15 +97,9 @@
                 {{-- Overlay --}}
                 <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 z-0"></div>
 
-                {{-- Left Top --}}
-                <div class="relative z-10 flex items-center justify-between">
-                    <span class="text-white font-bold text-xs tracking-wider uppercase">Pilihan Unggulan</span>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('login') }}" class="text-xs text-white/80 font-semibold hover:text-white transition-colors px-2">Masuk</a>
-                        <a href="{{ route('catalog.index') }}" class="text-xs font-bold text-white bg-white/20 hover:bg-white/30 border border-white/30 backdrop-blur-md px-3.5 py-1 rounded-full transition-all">
-                            Katalog
-                        </a>
-                    </div>
+                {{-- Left Header Badge --}}
+                <div class="relative z-10 flex items-center">
+                    <span class="text-white font-bold text-xs tracking-wider uppercase bg-black/30 backdrop-blur-md border border-white/15 px-3 py-1 rounded-full">Pilihan Unggulan</span>
                 </div>
 
                 {{-- Left Bottom --}}
