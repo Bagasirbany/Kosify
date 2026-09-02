@@ -15,6 +15,10 @@ Route::middleware('guest')->group(function () {
                 ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('auth/google', function () {
+        return redirect()->route('login')->with('status', 'Fitur Login dengan Google siap digunakan setelah Google Client ID & Secret dihubungkan.');
+    })->name('login.google');
 });
 
 Route::middleware('auth')->group(function () {
