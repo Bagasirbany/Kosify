@@ -1,345 +1,268 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Daftar - Kosify</title>
+    <title>Daftar Akun Baru - Kosify</title>
 
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-circle.png') }}?v=2">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
-        html, body { height: 100%; overflow: hidden; }
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        .page-bg {
-            height: 100vh;
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .input-clean {
             width: 100%;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #0f172a;
+            transition: all 0.2s ease;
+        }
+        .input-clean::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        .input-clean:focus {
+            outline: none;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        }
+
+        .btn-primary-dark {
+            width: 100%;
+            background: #0f172a;
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 11px;
+            font-size: 13.5px;
+            letter-spacing: 0.01em;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+        }
+        .btn-primary-dark:hover {
+            background: #020617;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+        }
+
+        .arrow-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: url('{{ asset("images/auth_window_mountains.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            padding: 24px;
+            color: #ffffff;
+            transition: all 0.2s ease;
         }
-        .page-bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.08);
-            z-index: 1;
-        }
-
-        .login-container {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            width: 100%;
-            max-width: 960px;
-            height: min(92vh, 620px);
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.65);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.3);
-        }
-
-        /* ── LEFT PANEL (45%) ── */
-        .panel-left {
-            width: 45%;
-            flex-shrink: 0;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .photo-card {
-            position: absolute;
-            inset: 10px;
-            border-radius: 18px;
-            overflow: hidden;
-            background-image: url('{{ asset("images/left_card_room.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-        .photo-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(170deg,
-                rgba(8,6,18,0.25) 0%,
-                rgba(8,6,18,0.10) 30%,
-                rgba(8,6,18,0.45) 65%,
-                rgba(8,6,18,0.85) 100%
-            );
-        }
-        .photo-card > * { position: relative; z-index: 2; }
-
-        .left-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 22px;
-        }
-        .left-top-title { color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-        .left-top-actions { display: flex; align-items: center; gap: 10px; }
-        .left-top-actions a.text-link {
-            color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 500;
-            text-decoration: none; transition: color 0.2s;
-        }
-        .left-top-actions a.text-link:hover { color: #fff; }
-        .left-top-actions a.pill-btn {
-            color: #fff; font-size: 11px; font-weight: 600;
-            padding: 5px 16px; border: 1.5px solid rgba(255,255,255,0.6);
-            background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
-            border-radius: 20px; text-decoration: none; transition: all 0.2s;
-        }
-        .left-top-actions a.pill-btn:hover {
-            background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,1);
-        }
-
-        .left-spacer { flex: 1; }
-
-        .left-bottom { padding: 0 22px 20px; }
-        .artist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-        .artist-avatar {
-            width: 38px; height: 38px; border-radius: 50%; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.6); flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-        }
-        .artist-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .artist-name { color: #fff; font-weight: 700; font-size: 12.5px; line-height: 1.2; }
-        .artist-role { color: rgba(255,255,255,0.75); font-weight: 400; font-size: 11px; margin-top: 1px; }
-
-        .nav-arrows { display: flex; align-items: center; gap: 6px; }
-        .nav-arrow {
-            width: 30px; height: 30px; border-radius: 50%;
-            border: 1.5px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.9); cursor: pointer; transition: all 0.2s;
-        }
-        .nav-arrow:hover { background: rgba(255,255,255,0.3); border-color: #fff; }
-        .nav-arrow svg { width: 13px; height: 13px; }
-
-        /* ── RIGHT PANEL (55%) ── */
-        .panel-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: transparent;
-        }
-
-        .right-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 28px 40px 0;
-        }
-        .brand-text {
-            font-weight: 900; font-size: 14.5px; color: #0f172a;
-            letter-spacing: 0.08em; text-decoration: none;
-        }
-        .lang-pill {
-            display: flex; align-items: center; gap: 4px;
-            font-size: 11px; font-weight: 600; color: #1e293b;
-            background: rgba(255, 255, 255, 0.65); border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 20px; padding: 4px 12px; backdrop-filter: blur(4px);
-        }
-        .lang-pill svg { width: 12px; height: 12px; }
-
-        .form-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 50px;
-        }
-
-        .greeting-title {
-            font-size: 28px; font-weight: 800; color: #0f172a;
-            letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 4px;
-        }
-        .greeting-sub { font-size: 13px; font-weight: 500; color: #475569; margin-bottom: 22px; }
-
-        .field-group { margin-bottom: 10px; }
-        .field-label {
-            display: block; font-size: 11px; font-weight: 600;
-            color: #334155; margin-bottom: 3px;
-        }
-        .field-input {
-            width: 100%; border: none; border-bottom: 1.5px solid rgba(15, 23, 42, 0.25);
-            padding: 8px 2px; font-size: 13px; font-weight: 500;
-            color: #0f172a; background: transparent; outline: none;
-            transition: border-color 0.2s;
-        }
-        .field-input::placeholder { color: #64748b; }
-        .field-input:focus { border-color: #0f172a; }
-
-        .btn-register {
-            width: 100%; padding: 11.5px; border: none; border-radius: 12px;
-            background: #ef4444; color: #fff; font-size: 13.5px; font-weight: 700;
-            cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
-            margin-top: 16px;
-        }
-        .btn-register:hover {
-            background: #dc2626; transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
-        }
-
-        .signin-text {
-            text-align: center; font-size: 12px; font-weight: 500;
-            color: #334155; margin-top: 14px;
-        }
-        .signin-text a { color: #ef4444; font-weight: 700; text-decoration: none; margin-left: 2px; }
-        .signin-text a:hover { text-decoration: underline; }
-
-        .social-footer {
-            display: flex; align-items: center; justify-content: center;
-            gap: 18px; padding: 14px 40px 20px;
-        }
-        .social-footer a { color: #475569; transition: color 0.2s, transform 0.2s; }
-        .social-footer a:hover { color: #0f172a; transform: translateY(-1px); }
-        .social-footer svg { width: 16px; height: 16px; }
-
-        @media (max-width: 768px) {
-            .page-bg { padding: 12px; }
-            .login-container {
-                flex-direction: column; height: auto; max-height: 98vh;
-                border-radius: 20px; overflow-y: auto;
-            }
-            .panel-left { display: none; }
-            .form-area { padding: 0 28px; }
-            .right-top { padding: 20px 28px 0; }
-            .social-footer { padding: 12px 28px 18px; }
+        .arrow-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #ffffff;
+            transform: scale(1.05);
         }
     </style>
 </head>
 
-<body>
-<div class="page-bg">
-    <div class="login-container">
+<body class="h-full flex items-center justify-center p-4 md:p-6 lg:p-8">
 
-        <!-- ═══════ LEFT PANEL ═══════ -->
-        <div class="panel-left">
-            <div class="photo-card">
-                <div class="left-top">
-                    <span class="left-top-title">Selected Works</span>
-                    <div class="left-top-actions">
-                        <a href="{{ route('login') }}" class="text-link">Sign In</a>
-                        <a href="{{ route('catalog.index') }}" class="pill-btn">Join Us</a>
+    {{-- Main Container Card --}}
+    <div class="w-full max-w-[980px] h-[94vh] max-h-[640px] bg-white rounded-[28px] shadow-2xl shadow-slate-300/70 border border-slate-200/60 flex overflow-hidden my-auto">
+
+        {{-- LEFT PANEL (46%) --}}
+        <div class="hidden lg:flex lg:w-[46%] p-3.5 flex-shrink-0">
+            <div class="w-full h-full rounded-[22px] overflow-hidden relative flex flex-col justify-between p-6 bg-cover bg-center shadow-inner"
+                 style="background-image: url('{{ asset('images/rooms/room_102.jpg') }}');">
+                
+                {{-- Overlay --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 z-0"></div>
+
+                {{-- Left Top --}}
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="text-white font-bold text-xs tracking-wider uppercase">Pilihan Unggulan</span>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('login') }}" class="text-xs text-white/80 font-semibold hover:text-white transition-colors px-2">Masuk</a>
+                        <a href="{{ route('catalog.index') }}" class="text-xs font-bold text-white bg-white/20 hover:bg-white/30 border border-white/30 backdrop-blur-md px-3.5 py-1 rounded-full transition-all">
+                            Katalog
+                        </a>
                     </div>
                 </div>
-                <div class="left-spacer"></div>
-                <div class="left-bottom">
-                    <div class="artist-row">
-                        <div class="artist-avatar">
-                            <img src="{{ asset('images/left_card_room.jpg') }}" alt="Kosify">
+
+                {{-- Left Bottom --}}
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="flex items-center gap-3 bg-black/40 backdrop-blur-md border border-white/20 rounded-full py-1.5 px-2.5 pr-4 shadow-lg">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border border-white/50 flex-shrink-0">
+                            <img src="{{ asset('images/rooms/room_102.jpg') }}" class="w-full h-full object-cover" alt="Standard">
                         </div>
-                        <div>
-                            <div class="artist-name">Kosify.id</div>
-                            <div class="artist-role">Premium Living</div>
+                        <div class="leading-tight">
+                            <p class="text-white font-bold text-xs">Kamar Standard Mahasiswa</p>
+                            <p class="text-white/70 text-[10.5px] font-medium">Kosify Comfort Living</p>
                         </div>
                     </div>
-                    <div class="nav-arrows">
-                        <button class="nav-arrow" type="button" aria-label="Previous">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" class="arrow-btn" aria-label="Previous">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                            </svg>
                         </button>
-                        <button class="nav-arrow" type="button" aria-label="Next">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <button type="button" class="arrow-btn" aria-label="Next">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <!-- ═══════ RIGHT PANEL ═══════ -->
-        <div class="panel-right">
+        {{-- RIGHT PANEL (54%) --}}
+        <div class="flex-1 flex flex-col justify-between p-6 sm:p-8 lg:p-9">
 
-            <div class="right-top">
-                <a href="{{ route('home') }}" class="brand-text">KOSIFY</a>
-                <div class="lang-pill">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+            {{-- Top Branding Header --}}
+            <div class="flex items-center justify-between">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 group">
+                    <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-7 w-auto object-contain">
+                    <span class="text-slate-900 font-black text-base tracking-tight group-hover:text-slate-700 transition-colors">KOSIFY</span>
+                </a>
+
+                <a href="{{ route('home') }}" class="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1">
+                    <span>Beranda</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    EN
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:10px;height:10px">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                </div>
+                </a>
             </div>
 
-            <div class="form-area">
+            {{-- Center Form Content --}}
+            <div class="w-full max-w-[360px] mx-auto my-auto py-1">
+                
+                {{-- Headings --}}
+                <div class="text-center mb-4">
+                    <h1 class="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight leading-tight">
+                        Buat Akun Baru 🏡
+                    </h1>
+                    <p class="text-slate-500 text-xs sm:text-sm font-medium mt-0.5">
+                        Daftar akun untuk mulai reservasi kamar kos impian
+                    </p>
+                </div>
 
-                <h1 class="greeting-title">Buat Akun Baru 🏡</h1>
-                <p class="greeting-sub">Bergabung dengan komunitas Kosify</p>
-
+                {{-- Alerts --}}
                 @if ($errors->any())
-                    <div style="margin-bottom:14px;padding:10px 14px;border-radius:10px;background:rgba(254, 242, 242, 0.95);border:1px solid #fecaca;color:#dc2626;font-size:12px;font-weight:600">
+                    <div class="mb-3 px-3.5 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
                         @foreach ($errors->all() as $error)
                             <p>{{ $error }}</p>
                         @endforeach
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('register') }}" data-turbo="false">
+                <form method="POST" action="{{ route('register') }}" class="space-y-2.5" data-turbo="false">
                     @csrf
 
-                    <div class="field-group">
-                        <label class="field-label">Nama Lengkap</label>
-                        <input type="text" name="name" value="{{ old('name') }}" required autofocus placeholder="Nama lengkap Anda" class="field-input">
+                    <div>
+                        <label for="name" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Nama Lengkap</label>
+                        <input id="name" type="text" name="name" value="{{ old('name') }}"
+                               required autofocus placeholder="Nama lengkap Anda"
+                               class="input-clean">
                     </div>
 
-                    <div class="field-group">
-                        <label class="field-label">WhatsApp</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="081234567890" class="field-input">
+                    <div>
+                        <label for="phone" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">WhatsApp</label>
+                        <input id="phone" type="text" name="phone" value="{{ old('phone') }}"
+                               required placeholder="081234567890"
+                               class="input-clean">
                     </div>
 
-                    <div class="field-group">
-                        <label class="field-label">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}" required placeholder="you@example.com" class="field-input">
+                    <div>
+                        <label for="email" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Email Aktif</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}"
+                               required placeholder="nama@email.com"
+                               class="input-clean">
                     </div>
 
-                    <div class="field-group">
-                        <label class="field-label">Password</label>
-                        <input type="password" name="password" required placeholder="Minimal 8 karakter" class="field-input">
+                    <div>
+                        <label for="password" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Password</label>
+                        <div class="relative">
+                            <input id="password" type="password" name="password"
+                                   required placeholder="Minimal 8 karakter"
+                                   class="input-clean pr-10">
+                            <button type="button" onclick="togglePass('password', this)" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="field-group">
-                        <label class="field-label">Konfirmasi Password</label>
-                        <input type="password" name="password_confirmation" required placeholder="Ulangi password" class="field-input">
+                    <div>
+                        <label for="password_confirmation" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">Konfirmasi Password</label>
+                        <div class="relative">
+                            <input id="password_confirmation" type="password" name="password_confirmation"
+                                   required placeholder="Ulangi password"
+                                   class="input-clean pr-10">
+                            <button type="button" onclick="togglePass('password_confirmation', this)" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-register">Sign Up</button>
+                    <div class="pt-1.5">
+                        <button type="submit" class="btn-primary-dark">
+                            Daftar Sekarang
+                        </button>
+                    </div>
                 </form>
 
-                <p class="signin-text">
-                    Already have an account?
-                    <a href="{{ route('login') }}">Sign in</a>
+                <p class="text-center text-xs text-slate-500 mt-3 font-medium">
+                    Sudah punya akun?
+                    <a href="{{ route('login') }}" class="text-slate-900 font-bold hover:underline ml-1">Masuk</a>
                 </p>
+
             </div>
 
-            <div class="social-footer">
-                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
-                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
-                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-                <a href="#"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            <div class="text-center">
+                <p class="text-[11px] text-slate-400 font-medium">&copy; 2026 Kosify. Platform Hunian Modern & Nyaman.</p>
             </div>
 
         </div>
 
     </div>
-</div>
+
+    <script>
+        function togglePass(id, btn) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            const open = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+            const off = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+            const svg = btn.querySelector('svg');
+            if (input.type === 'password') { input.type = 'text'; svg.innerHTML = off; }
+            else { input.type = 'password'; svg.innerHTML = open; }
+        }
+    </script>
 </body>
 </html>
