@@ -19,7 +19,6 @@ Route::middleware('guest')->group(function () {
 
     // Google OAuth Routes
     Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('login.google');
-    Route::post('auth/google/select', [GoogleAuthController::class, 'selectAccount'])->name('login.google.select');
     Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
 });
 
