@@ -174,9 +174,9 @@
             </div>
         </div>
 
-        <!-- ROW 3: BOTTOM SECTION -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <!-- Square 1 -->
+        <!-- ROW 3: STATS OVERVIEW -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Card 1: Status Pembayaran -->
             <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-6 flex flex-col justify-between">
                 <div class="flex items-start justify-between mb-4">
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STATUS PEMBAYARAN</span>
@@ -190,7 +190,7 @@
                 </div>
             </div>
 
-            <!-- Square 2 -->
+            <!-- Card 2: Layanan Keluhan -->
             <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-6 flex flex-col justify-between">
                 <div class="flex items-start justify-between mb-4">
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">LAYANAN KELUHAN</span>
@@ -203,6 +203,88 @@
                     <p class="text-xs font-semibold text-slate-500 mt-2">Gunakan menu Lapor Kendala untuk memantau keluhan fasilitas penyewa.</p>
                 </div>
             </div>
+
+            <!-- Card 3: Kepuasan Penghuni (Rating Kos) -->
+            <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-6 flex flex-col justify-between">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">KEPUASAN PENGHUNI</span>
+                    <span class="px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-md text-[10px] font-black uppercase tracking-wider text-amber-800">
+                        {{ $averageRating >= 4.5 ? 'SANGAT BAIK' : 'BAIK' }}
+                    </span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{{ number_format($averageRating ?? 5.0, 1) }}</span>
+                        <div class="text-amber-500 text-lg font-black tracking-tighter">
+                            @for($i = 1; $i <= 5; $i++)
+                                {{ $i <= round($averageRating ?? 5.0) ? '★' : '☆' }}
+                            @endfor
+                        </div>
+                    </div>
+                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        TOTAL: <span class="text-slate-900 font-black">{{ $totalReviews ?? 0 }} ULASAN TERVERIFIKASI</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 4: ULASAN & RATING PENGHUNI TERBARU -->
+        <div class="bg-white border border-slate-200 shadow-xs rounded-3xl p-6 md:p-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">FEEDBACK & REPUTASI</span>
+                    <h2 class="text-xl font-black text-slate-900 tracking-tight">Ulasan & Rating Penghuni Terbaru</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 rounded-xl bg-slate-100 text-xs font-bold text-slate-700">
+                        {{ $totalReviews ?? 0 }} Total Ulasan Masuk
+                    </span>
+                </div>
+            </div>
+
+            @if(isset($recentReviews) && $recentReviews->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach($recentReviews as $rev)
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-start justify-between gap-2 mb-3">
+                                    <div class="flex items-center gap-2.5 min-w-0">
+                                        <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                                            {{ strtoupper(substr($rev->user->name ?? 'P', 0, 1)) }}
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p class="text-xs font-bold text-slate-900 truncate">{{ $rev->user->name ?? 'Penyewa Kos' }}</p>
+                                            <p class="text-[10px] text-slate-400">{{ $rev->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-black uppercase tracking-wider text-slate-800 shrink-0">
+                                        KMR {{ $rev->room->room_number ?? '-' }}
+                                    </span>
+                                </div>
+                                
+                                <div class="text-amber-500 text-xs font-bold mb-2">
+                                    @for($s = 1; $s <= 5; $s++)
+                                        {{ $s <= $rev->rating ? '★' : '☆' }}
+                                    @endfor
+                                    <span class="text-slate-600 font-bold ml-1 text-[11px]">{{ $rev->rating }}.0</span>
+                                </div>
+
+                                <p class="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
+                                    "{{ $rev->comment }}"
+                                </p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-10">
+                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400 text-lg">
+                        ★
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800 mb-1">Belum Ada Ulasan Masuk</h3>
+                    <p class="text-xs text-slate-500">Ulasan dan rating yang dikirimkan oleh penghuni akan tampil secara otomatis di sini.</p>
+                </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

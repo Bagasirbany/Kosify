@@ -12,7 +12,7 @@ class RoomController extends Controller
     // Public Catalog
     public function catalog(Request $request)
     {
-        $rooms = Room::with('reservations')->orderBy('room_number', 'asc')->get();
+        $rooms = Room::with(['reservations', 'reviews'])->orderBy('room_number', 'asc')->get();
         return view('catalog', compact('rooms'));
     }
 
@@ -27,23 +27,27 @@ class RoomController extends Controller
     }
 
     // User: Submit Review Kamar
-    public function storeReview(Request $request, $roomId)
+    public function storeReview(Request $request, $room)
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|min:5|max:1000',
+            'comment' => 'required|string|min:3|max:1000',
         ]);
 
-        $room = Room::findOrFail($roomId);
+        $roomId = is_object($room) ? $room->id : $room;
+        $targetRoom = Room::findOrFail($roomId);
 
         \App\Models\Review::create([
             'user_id' => auth()->id(),
-            'room_id' => $roomId,
-            'rating' => $request->rating,
-            'comment' => $request->comment,
+            'room_id' => $targetRoom->id,
+            'rating' => (int) $request->rating,
+            'comment' => trim($request->comment),
         ]);
 
-        return back()->with('success', 'Terima kasih! Ulasan dan rating Anda berhasil disimpan.');
+        // Hapus cache agar dashboard langsung membaca rating terbaru
+        Cache::forget('admin_dashboard_metrics');
+
+        return back()->with('success', 'Terima kasih! Ulasan dan rating Anda berhasil disimpan ke database.');
     }
 
     // Admin Index

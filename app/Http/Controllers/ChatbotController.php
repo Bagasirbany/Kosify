@@ -28,7 +28,7 @@ class ChatbotController extends Controller
         $ownerName = $settings['owner_name'] ?? 'Bpk. Kosify Owner';
         $ownerPhone = $settings['owner_phone'] ?? '0812-3456-7890';
         $ownerEmail = $settings['owner_email'] ?? 'owner@kosify.com';
-        $kosAddress = $settings['kos_address'] ?? 'Jl. Kosify Raya No. 88, Pusat Kota';
+        $kosAddress = $settings['kos_address'] ?? 'Jl. Kaliurang KM 5.2 No. 18, Caturtunggal, Sleman, D.I. Yogyakarta 55281';
 
         try {
             // 1. CEK NOMOR KAMAR SPESIFIK (Misal: "kamar 101", "102", "info 203", "ada kamar 302?")

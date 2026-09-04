@@ -64,7 +64,7 @@
         </div>
         <div class="footer">
             &copy; {{ date('Y') }} Kosify Platform. All rights reserved.<br>
-            Jl. Kosify Raya No. 88, Pusat Kota
+            Jl. Kaliurang KM 5.2 No. 18, Caturtunggal, Sleman, D.I. Yogyakarta 55281
         </div>
     </div>
 </body>

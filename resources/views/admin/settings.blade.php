@@ -87,12 +87,12 @@
 
                     <div>
                         <label for="owner_email" class="block text-[10px] font-bold uppercase tracking-wider text-slate-700 mb-2">Email Resmi</label>
-                        <input type="email" name="owner_email" id="owner_email" value="{{ old('owner_email', $settings['owner_email'] ?? 'owner@kosify.com') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
+                        <input type="email" name="owner_email" id="owner_email" value="{{ old('owner_email', $settings['owner_email'] ?? 'pengelola@kosify.id') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
                     </div>
 
                     <div>
                         <label for="kos_address" class="block text-[10px] font-bold uppercase tracking-wider text-slate-700 mb-2">Alamat Lengkap Kos</label>
-                        <input type="text" name="kos_address" id="kos_address" value="{{ old('kos_address', $settings['kos_address'] ?? 'Jl. Kosify Raya No. 88, Pusat Kota') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
+                        <input type="text" name="kos_address" id="kos_address" value="{{ old('kos_address', $settings['kos_address'] ?? 'Jl. Kaliurang KM 5.2 No. 18, Caturtunggal, Sleman, D.I. Yogyakarta 55281') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
                     </div>
                 </div>
             </div>

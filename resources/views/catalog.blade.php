@@ -171,10 +171,19 @@
                             </div>
 
                             {{-- Micro Info (Text-First) --}}
+                            @php
+                                $roomAvg = $room->reviews && $room->reviews->count() > 0 
+                                    ? round($room->reviews->avg('rating'), 1) 
+                                    : 5.0;
+                                $roomRevCount = $room->reviews ? $room->reviews->count() : 0;
+                            @endphp
                             <div class="flex items-center gap-3 text-xs text-slate-500 mb-4 pb-3 border-b border-slate-100 font-bold uppercase tracking-wider">
-                                <span>LOKASI: PUSAT KOTA</span>
+                                <span>SLEMAN, YOGYAKARTA</span>
                                 <span>•</span>
-                                <span class="text-slate-900">RATING: 4.9 / 5.0</span>
+                                <span class="text-slate-900 flex items-center gap-1">
+                                    <span class="text-amber-500 font-black">★</span> {{ number_format($roomAvg, 1) }}
+                                    <span class="text-slate-400 font-medium text-[10px]">({{ $roomRevCount }} ulasan)</span>
+                                </span>
                             </div>
                             
                             {{-- Description --}}

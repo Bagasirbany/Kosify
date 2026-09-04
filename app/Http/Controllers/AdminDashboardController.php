@@ -74,6 +74,10 @@ class AdminDashboardController extends Controller
                 $chartData[$monthName] = $percentage;
             }
 
+            // 7. Rating & Ulasan Penghuni
+            $averageRating = \App\Models\Review::count() > 0 ? round(\App\Models\Review::avg('rating'), 1) : 5.0;
+            $totalReviews = \App\Models\Review::count();
+
             return [
                 'totalPendapatan' => $totalPendapatan,
                 'penyewaBaru' => $penyewaBaru,
@@ -84,10 +88,12 @@ class AdminDashboardController extends Controller
                 'kamarKosong' => $kamarKosong,
                 'totalKamar' => $totalKamar,
                 'chartData' => $chartData,
+                'averageRating' => $averageRating,
+                'totalReviews' => $totalReviews,
             ];
         });
 
-        // 7. Pengingat Jatuh Tempo Sewa (Realtime calculation)
+        // 8. Pengingat Jatuh Tempo Sewa (Realtime calculation)
         $now = Carbon::now();
         $expiringLeases = Reservation::with(['room', 'user'])
             ->whereIn('status', ['active', 'confirmed', 'paid', 'success'])
@@ -110,6 +116,12 @@ class AdminDashboardController extends Controller
             ->sortBy('days_left')
             ->values();
 
-        return view('dashboard', array_merge($dashboardData, ['expiringLeases' => $expiringLeases]));
+        // 9. Ulasan & Rating Terbaru
+        $recentReviews = \App\Models\Review::with(['user', 'room'])->latest()->take(6)->get();
+
+        return view('dashboard', array_merge($dashboardData, [
+            'expiringLeases' => $expiringLeases,
+            'recentReviews' => $recentReviews,
+        ]));
     }
 }
