@@ -183,7 +183,7 @@
             {{-- Top Branding Header --}}
             <div class="flex items-center justify-between">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-                    <img src="{{ asset('images/logo.png') }}" alt="Kosify" class="h-7 w-auto object-contain">
+                    <img src="{{ asset('images/favicon-circle.png') }}?v=3" alt="Kosify" class="h-7 w-7 object-contain">
                     <span class="text-slate-900 font-black text-base tracking-tight group-hover:text-slate-700 transition-colors">KOSIFY</span>
                 </a>
 

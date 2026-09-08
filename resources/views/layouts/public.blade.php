@@ -88,7 +88,7 @@
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
             <!-- Logo -->
             <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
-                <img src="{{ asset('images/logo.png') }}" alt="Kosify Logo" class="h-12 w-auto object-contain">
+                <img src="{{ asset('images/logo.png') }}?v=3" alt="Kosify Logo" class="h-12 w-auto object-contain">
             </a>
 
             <!-- Center Links with Dynamic ScrollSpy Active Indicator -->
@@ -279,7 +279,7 @@
                 <div class="space-y-3">
                     <div>
                         <a href="{{ route('home') }}" class="inline-block mb-1">
-                            <img src="{{ asset('images/logo.png') }}" alt="Kosify Logo" class="h-10 w-auto object-contain">
+                            <img src="{{ asset('images/logo.png') }}?v=3" alt="Kosify Logo" class="h-10 w-auto object-contain">
                         </a>
                         <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mt-2 mb-1">Tentang Kami</h4>
                         <p class="text-xs text-slate-500 font-medium leading-relaxed">
