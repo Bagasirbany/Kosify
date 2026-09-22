@@ -30,9 +30,9 @@
                 <span class="text-sm font-semibold text-slate-500">Total Pengeluaran ({{ $year }})</span>
                 <h3 class="text-3xl font-black text-slate-800 mt-2">Rp {{ number_format($yearlyExpense, 0, ',', '.') }}</h3>
             </div>
-            <div class="bg-blue-600 border border-blue-600 shadow-[0_4px_15px_-3px_rgba(37,99,235,0.4)] rounded-xl p-6 text-white">
-                <span class="text-sm font-semibold text-blue-100">Total Profit ({{ $year }})</span>
-                <h3 class="text-3xl font-black mt-2">Rp {{ number_format($yearlyProfit, 0, ',', '.') }}</h3>
+            <div class="bg-white border border-slate-200 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] rounded-xl p-6">
+                <span class="text-sm font-semibold text-slate-500">Total Profit ({{ $year }})</span>
+                <h3 class="text-3xl font-black text-slate-800 mt-2">Rp {{ number_format($yearlyProfit, 0, ',', '.') }}</h3>
             </div>
         </div>
 
