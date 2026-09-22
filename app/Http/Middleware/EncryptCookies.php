@@ -12,6 +12,7 @@ class EncryptCookies extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'kosify_remember_email',
+        'kosify_remember_active',
     ];
 }

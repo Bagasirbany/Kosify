@@ -16,8 +16,21 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        $activeBooking = \App\Models\Reservation::with('room')
+            ->where('user_id', $user->id)
+            ->latest('created_at')
+            ->first();
+
+        $totalBookings = \App\Models\Reservation::where('user_id', $user->id)->count();
+        $totalComplaints = \App\Models\Complaint::where('user_id', $user->id)->count();
+
         return view('account-settings', [
-            'user' => $request->user(),
+            'user' => $user,
+            'activeBooking' => $activeBooking,
+            'totalBookings' => $totalBookings,
+            'totalComplaints' => $totalComplaints,
         ]);
     }
 

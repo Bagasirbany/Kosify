@@ -139,17 +139,17 @@
             <!-- Stamp / Status Badge -->
             <div class="flex items-center gap-3">
                 @if(in_array(strtolower($reservation->status), ['active', 'confirmed', 'paid', 'success', 'completed']))
-                    <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-xl">
-                        ✓
+                    <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Status Tagihan</span>
                         <span class="text-emerald-700 font-extrabold text-lg tracking-wider uppercase">LUNAS / TERVERIFIKASI</span>
-                        <span class="block text-[11px] text-slate-500">Metode: Midtrans Online Payment</span>
+                        <span class="block text-[11px] text-slate-500">Metode: {{ optional($reservation->payments->first())->payment_method ?? 'Transfer Bank Resmi (Terverifikasi)' }}</span>
                     </div>
                 @else
-                    <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-black text-xl">
-                        ⏱
+                    <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Status Tagihan</span>

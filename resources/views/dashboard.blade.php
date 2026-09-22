@@ -15,38 +15,40 @@
             </div>
         </div>
             
-        <!-- PENGINGAT JATUH TEMPO SEWA (DUE DATE REMINDER) -->
+        <!-- PENGINGAT JATUH TEMPO SEWA (DUE DATE REMINDER - Modern & Elegan) -->
         @if(isset($expiringLeases) && $expiringLeases->count() > 0)
-            <div class="mb-8 bg-amber-50 border border-amber-300 rounded-3xl p-6 shadow-xs">
-                <div class="flex items-start justify-between gap-4 mb-4 flex-wrap">
+            <div class="mb-8 bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs">
+                <div class="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-slate-100 flex-wrap">
                     <div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-amber-800 bg-amber-200/70 px-2.5 py-1 rounded-md inline-block mb-2">
-                            [ PERINGATAN JATUH TEMPO ]
-                        </span>
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-amber-50 text-amber-800 border border-amber-200/70 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            Peringatan Jatuh Tempo
+                        </div>
                         <h3 class="font-black text-slate-900 text-base">{{ $expiringLeases->count() }} Penyewa Mendekati Akhir Masa Sewa</h3>
-                        <p class="text-xs text-slate-600 font-medium mt-0.5">Masa sewa tersisa kurang dari 7 hari. Segera konfirmasi perpanjangan sewa.</p>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5">Masa sewa tersisa kurang dari 7 hari. Segera konfirmasi perpanjangan sewa kepada penghuni.</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-1">
                     @foreach($expiringLeases as $lease)
-                        <div class="bg-white p-4 rounded-2xl border border-amber-200 shadow-2xs flex items-center justify-between gap-3">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-black text-slate-900 text-xs">{{ $lease->tenant_name }}</span>
-                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-800 text-[10px] font-black rounded uppercase">KMR {{ $lease->room->room_number ?? '-' }}</span>
+                        <div class="bg-slate-50 hover:bg-slate-100/80 p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex items-center justify-between gap-3 transition-colors">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-bold text-slate-900 text-xs truncate">{{ $lease->tenant_name }}</span>
+                                    <span class="px-2 py-0.5 bg-white border border-slate-200 text-slate-700 text-[10px] font-bold rounded-md uppercase shrink-0">Kamar {{ $lease->room->room_number ?? '-' }}</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500 mt-1 font-medium">
-                                    Habis: <strong class="text-slate-900 font-bold">{{ \Carbon\Carbon::parse($lease->calculated_end_date)->format('d M Y') }}</strong>
+                                <div class="text-[11px] text-slate-500 font-medium">
+                                    <span>Batas: <strong class="text-slate-800 font-semibold">{{ \Carbon\Carbon::parse($lease->calculated_end_date)->format('d M Y') }}</strong></span>
                                     @if($lease->days_left <= 0)
-                                        <span class="text-red-600 font-black uppercase block text-[10px]">[ JATUH TEMPO ]</span>
+                                        <span class="text-rose-600 font-bold block text-[10px] mt-0.5">Jatuh Tempo Hari Ini</span>
                                     @else
-                                        <span class="text-amber-700 font-bold block text-[10px]">({{ $lease->days_left }} HARI LAGI)</span>
+                                        <span class="text-amber-600 font-bold block text-[10px] mt-0.5">Sisa {{ $lease->days_left }} Hari Lagi</span>
                                     @endif
-                                </p>
+                                </div>
                             </div>
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $lease->tenant_phone ?? '6281234567890') }}?text={{ urlencode('Halo Kak ' . $lease->tenant_name . ', kami dari pengelola Kosify ingin mengonfirmasi terkait sewa Kamar ' . ($lease->room->room_number ?? '') . ' yang akan berakhir pada tanggal ' . \Carbon\Carbon::parse($lease->calculated_end_date)->format('d M Y') . '. Apakah berencana untuk memperpanjang sewa bulan depan? Terima kasih.') }}" target="_blank" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black uppercase tracking-wider rounded-xl shrink-0 transition-colors shadow-xs">
-                                WA &rarr;
+                            <a href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $lease->tenant_phone ?? '6285815721534')) }}?text={{ urlencode('Halo Kak ' . $lease->tenant_name . ', kami dari pengelola Kosify ingin mengonfirmasi terkait sewa Kamar ' . ($lease->room->room_number ?? '') . ' yang akan berakhir pada tanggal ' . \Carbon\Carbon::parse($lease->calculated_end_date)->format('d M Y') . '. Apakah berencana untuk memperpanjang sewa bulan depan? Terima kasih.') }}" target="_blank" class="px-3.5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl shrink-0 transition-colors shadow-xs inline-flex items-center gap-1.5">
+                                <span>Hubungi</span>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                             </a>
                         </div>
                     @endforeach
@@ -208,21 +210,32 @@
             <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-6 flex flex-col justify-between">
                 <div class="flex items-start justify-between mb-4">
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">KEPUASAN PENGHUNI</span>
-                    <span class="px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-md text-[10px] font-black uppercase tracking-wider text-amber-800">
-                        {{ $averageRating >= 4.5 ? 'SANGAT BAIK' : 'BAIK' }}
+                    <span class="px-2.5 py-1 {{ isset($totalReviews) && $totalReviews > 0 ? 'bg-amber-50 border border-amber-200 text-amber-800' : 'bg-slate-100 border border-slate-200 text-slate-600' }} rounded-md text-[10px] font-black uppercase tracking-wider">
+                        {{ isset($totalReviews) && $totalReviews > 0 ? ($averageRating >= 4.5 ? 'SANGAT BAIK' : 'BAIK') : 'BELUM ADA' }}
                     </span>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{{ number_format($averageRating ?? 5.0, 1) }}</span>
-                        <div class="text-amber-500 text-lg font-black tracking-tighter">
-                            @for($i = 1; $i <= 5; $i++)
-                                {{ $i <= round($averageRating ?? 5.0) ? '★' : '☆' }}
-                            @endfor
+                    @if(isset($totalReviews) && $totalReviews > 0)
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">{{ number_format($averageRating, 1) }}</span>
+                            <div class="flex items-center gap-1 text-amber-500">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="w-5 h-5 {{ $i <= round($averageRating) ? 'text-amber-500 fill-current' : 'text-slate-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                @endfor
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-2xl lg:text-3xl font-black text-slate-300 tracking-tight">-</span>
+                            <div class="flex items-center gap-1 text-slate-200">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="w-5 h-5 text-slate-200 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                @endfor
+                            </div>
+                        </div>
+                    @endif
                     <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                        TOTAL: <span class="text-slate-900 font-black">{{ $totalReviews ?? 0 }} ULASAN TERVERIFIKASI</span>
+                        TOTAL: <span class="text-slate-900 font-black">{{ $totalReviews ?? 0 }} ULASAN REALTIME</span>
                     </p>
                 </div>
             </div>
@@ -262,10 +275,12 @@
                                     </span>
                                 </div>
                                 
-                                <div class="text-amber-500 text-xs font-bold mb-2">
-                                    @for($s = 1; $s <= 5; $s++)
-                                        {{ $s <= $rev->rating ? '★' : '☆' }}
-                                    @endfor
+                                <div class="flex items-center gap-1 text-amber-500 mb-2">
+                                    <div class="flex items-center gap-0.5">
+                                        @for($s = 1; $s <= 5; $s++)
+                                            <svg class="w-3.5 h-3.5 {{ $s <= $rev->rating ? 'text-amber-500 fill-current' : 'text-slate-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        @endfor
+                                    </div>
                                     <span class="text-slate-600 font-bold ml-1 text-[11px]">{{ $rev->rating }}.0</span>
                                 </div>
 
@@ -278,8 +293,8 @@
                 </div>
             @else
                 <div class="text-center py-10">
-                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400 text-lg">
-                        ★
+                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+                        <svg class="w-6 h-6 text-slate-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                     </div>
                     <h3 class="text-sm font-bold text-slate-800 mb-1">Belum Ada Ulasan Masuk</h3>
                     <p class="text-xs text-slate-500">Ulasan dan rating yang dikirimkan oleh penghuni akan tampil secara otomatis di sini.</p>

@@ -38,4 +38,20 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * Render an exception into an HTTP response.
+     */
+    public function render($request, Throwable $e)
+    {
+        if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+            if ($request->is('login') || $request->routeIs('login')) {
+                return redirect()->route('login')->with('error', 'Sesi login Anda telah diperbarui secara otomatis. Silakan klik Masuk ke Akun kembali.');
+            }
+
+            return redirect()->back()->withInput($request->except(['password', '_token']))->with('error', 'Sesi formulir telah diperbarui. Silakan coba kembali.');
+        }
+
+        return parent::render($request, $e);
+    }
 }

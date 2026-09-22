@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
 
             event(new Registered($user));
 
-            Auth::login($user);
+            Auth::login($user, true);
         } catch (\Illuminate\Database\QueryException $e) {
             throw ValidationException::withMessages([
                 'email' => 'Gagal terhubung ke Database. Pastikan pengaturan di file .env (termasuk Password Supabase) sudah benar!',

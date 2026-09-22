@@ -74,7 +74,12 @@ class ReservationController extends Controller
         $reservation->total_price = ($room->price_per_month * $durationMonths) + 50000;
         $reservation->save();
 
-        return redirect()->route('bookings.my')->with('success', 'Booking berhasil dibuat. Silakan lakukan pembayaran.');
+        \Illuminate\Support\Facades\Cache::forget('admin_dashboard_full_bundle');
+        \Illuminate\Support\Facades\Cache::forget('admin_finance_bundle');
+
+        return redirect()->route('bookings.my')
+            ->with('auto_open_manual', $reservation->id)
+            ->with('success', 'Reservasi berhasil dibuat! Silakan lakukan transfer ke rekening pengelola dan unggah bukti transfer.');
     }
 
     // Admin: List Bookings
@@ -103,6 +108,9 @@ class ReservationController extends Controller
                 'verified_at' => now(),
             ]);
         }
+
+        \Illuminate\Support\Facades\Cache::forget('admin_dashboard_full_bundle');
+        \Illuminate\Support\Facades\Cache::forget('admin_finance_bundle');
 
         return back()->with('success', 'Status reservasi & pembayaran berhasil diperbarui.');
     }
@@ -173,5 +181,104 @@ class ReservationController extends Controller
         $reservation->save();
 
         return back()->with('success', 'Bukti transfer manual berhasil diunggah! Pengelola akan segera memverifikasi pembayaran Anda.');
+    }
+
+    // User: Ajukan Perpanjangan Sewa
+    public function extend(Request $request, $id)
+    {
+        $currentReservation = Reservation::with('room')->findOrFail($id);
+
+        if ($currentReservation->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        $durationMonths = (int) $request->input('duration_months', 1);
+        if (!in_array($durationMonths, [1, 3, 6, 12])) {
+            $durationMonths = 1;
+        }
+
+        // Tanggal mulai perpanjangan adalah tanggal checkout reservasi sebelumnya
+        $startDate = \Carbon\Carbon::parse($currentReservation->end_date);
+        $endDate = $startDate->copy()->addMonths($durationMonths);
+        $room = $currentReservation->room;
+
+        $newReservation = new Reservation();
+        $newReservation->id = Str::uuid()->toString();
+        $newReservation->room_id = $currentReservation->room_id;
+        $newReservation->user_id = Auth::id();
+        $newReservation->start_date = $startDate->toDateString();
+        $newReservation->end_date = $endDate->toDateString();
+        $newReservation->duration_months = $durationMonths;
+        $newReservation->status = 'pending';
+        $newReservation->total_price = ($room ? $room->price_per_month * $durationMonths : 1500000) + 50000;
+        $newReservation->save();
+
+        // Update status keputusan pada reservasi saat ini
+        $currentReservation->extension_decision = 'extended';
+        $currentReservation->extension_notes = 'Penyewa mengajukan perpanjangan sewa ' . $durationMonths . ' bulan (ID: ' . substr($newReservation->id, 0, 8) . ')';
+        $currentReservation->save();
+
+        return redirect()->route('bookings.my')
+            ->with('auto_open_manual', $newReservation->id)
+            ->with('success', 'Pengajuan perpanjangan sewa Kamar ' . ($room ? $room->room_number : '') . ' berhasil dibuat! Silakan lakukan transfer dan unggah bukti transfer.');
+    }
+
+    // User: Konfirmasi Tidak Memperpanjang (Checkout saat Jatuh Tempo)
+    public function terminate(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        if ($reservation->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        $reservation->extension_decision = 'will_checkout';
+        $reservation->extension_notes = $request->input('notes', 'Penyewa mengonfirmasi selesai sewa saat tenggat waktu tiba.');
+        $reservation->save();
+
+        $checkoutDate = \Carbon\Carbon::parse($reservation->end_date)->translatedFormat('d F Y');
+
+        return back()->with('success', 'Konfirmasi selesai sewa berhasil dicatat. Anda dijadwalkan checkout pada tanggal ' . $checkoutDate . '. Terima kasih telah menjadi penghuni Kosify!');
+    }
+
+    // Alias untuk kompatibilitas terminateContract
+    public function terminateContract(Request $request, $id)
+    {
+        return $this->terminate($request, $id);
+    }
+
+    // User: Batalkan Pesanan / Reservasi (Pending / Waiting Verification)
+    public function cancel(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        if ($reservation->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        if (!in_array($reservation->status, ['pending', 'waiting_verification'])) {
+            return back()->with('error', 'Pesanan yang sudah aktif/lunas tidak dapat dibatalkan secara mandiri. Silakan hubungi pemilik kos.');
+        }
+
+        $reservation->status = 'cancelled';
+        $reservation->save();
+
+        $room = \App\Models\Room::find($reservation->room_id);
+        if ($room) {
+            $hasOtherActive = Reservation::where('room_id', $room->id)
+                ->where('id', '!=', $reservation->id)
+                ->whereIn('status', ['confirmed', 'active'])
+                ->exists();
+            if (!$hasOtherActive) {
+                $room->status = 'available';
+                $room->save();
+            }
+        }
+
+        \Illuminate\Support\Facades\Cache::forget('admin_dashboard_full_bundle');
+        \Illuminate\Support\Facades\Cache::forget('admin_finance_bundle');
+
+        return redirect()->route('bookings.my')
+            ->with('success', 'Pesanan Kamar ' . ($room ? $room->room_number : '') . ' berhasil dibatalkan.');
     }
 }

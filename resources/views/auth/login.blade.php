@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Masuk ke Akun - Kosify</title>
 
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-circle.png') }}?v=2">
@@ -106,25 +107,6 @@
             border-color: #cbd5e1;
             color: #0f172a;
         }
-
-        .arrow-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(255, 255, 255, 0.45);
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            transition: all 0.2s ease;
-        }
-        .arrow-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: #ffffff;
-            transform: scale(1.05);
-        }
     </style>
 </head>
 
@@ -135,45 +117,8 @@
 
         {{-- LEFT PANEL: Inset Photo Showcase (46%) --}}
         <div class="hidden lg:flex lg:w-[46%] p-3.5 flex-shrink-0">
-            <div class="w-full h-full rounded-[22px] overflow-hidden relative flex flex-col justify-between p-6 bg-cover bg-center shadow-inner"
+            <div id="showcase-bg" class="w-full h-full rounded-[22px] overflow-hidden relative bg-cover bg-center shadow-inner transition-all duration-700"
                  style="background-image: url('{{ asset('images/rooms/room_201.jpg') }}');">
-                
-                {{-- Cinematic Dark Gradient Overlay --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 z-0"></div>
-
-                {{-- Left Header Badge --}}
-                <div class="relative z-10 flex items-center">
-                    <span class="text-white font-bold text-xs tracking-wider uppercase bg-black/30 backdrop-blur-md border border-white/15 px-3 py-1 rounded-full">Pilihan Unggulan</span>
-                </div>
-
-                {{-- Left Bottom Profile / Room Pill & Arrows --}}
-                <div class="relative z-10 flex items-center justify-between">
-                    {{-- Room Pill --}}
-                    <div class="flex items-center gap-3 bg-black/40 backdrop-blur-md border border-white/20 rounded-full py-1.5 px-2.5 pr-4 shadow-lg">
-                        <div class="w-8 h-8 rounded-full overflow-hidden border border-white/50 flex-shrink-0">
-                            <img src="{{ asset('images/rooms/room_201.jpg') }}" class="w-full h-full object-cover" alt="Suite">
-                        </div>
-                        <div class="leading-tight">
-                            <p class="text-white font-bold text-xs">Kamar Suite Eksekutif</p>
-                            <p class="text-white/70 text-[10.5px] font-medium">Kosify Premium Living</p>
-                        </div>
-                    </div>
-
-                    {{-- Slider Arrows --}}
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" class="arrow-btn" aria-label="Previous">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                        </button>
-                        <button type="button" class="arrow-btn" aria-label="Next">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -201,7 +146,7 @@
                 {{-- Headings --}}
                 <div class="text-center mb-5">
                     <h1 class="text-2xl sm:text-[28px] font-black text-slate-900 tracking-tight leading-tight">
-                        Halo, Selamat Datang 👋
+                        Halo, Selamat Datang
                     </h1>
                     <p class="text-slate-500 text-xs sm:text-sm font-medium mt-1">
                         Masuk ke akun Kosify Anda untuk melanjutkan
@@ -218,8 +163,14 @@
                 @endif
 
                 @if (session('status'))
-                    <div class="mb-3.5 px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium">
+                    <div class="mb-3.5 px-3.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
                         {{ session('status') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="mb-3.5 px-3.5 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+                        {{ session('error') }}
                     </div>
                 @endif
 
@@ -229,7 +180,7 @@
                     {{-- Email Input --}}
                     <div>
                         <label for="email" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Email</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}"
+                        <input id="email" type="email" name="email" value="{{ old('email', Cookie::get('kosify_remember_email') ?? (Cookie::queued('kosify_remember_email') ? Cookie::queued('kosify_remember_email')->getValue() : '')) }}"
                                required autofocus autocomplete="username"
                                placeholder="nama@email.com"
                                class="input-clean">
@@ -253,10 +204,20 @@
                             <button type="button" onclick="togglePass()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
                                 <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                 </svg>
                             </button>
                         </div>
+                    </div>
+
+                    {{-- Remember Me (Selalu Ingat Saya) --}}
+                    <div class="flex items-center justify-between pt-1 pb-1">
+                        <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input id="remember" type="checkbox" name="remember" value="1" 
+                                   {{ old('remember', Cookie::get('kosify_remember_active', '1')) ? 'checked' : '' }}
+                                   class="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 accent-slate-900 cursor-pointer">
+                            <span class="text-xs font-semibold text-slate-700">Selalu ingat saya</span>
+                        </label>
                     </div>
 
                     {{-- Primary Submit Button --}}
@@ -314,6 +275,66 @@
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
             }
         }
+
+        // Auto-refresh page if restored from browser back-forward cache (bfcache)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+
+        // Left Panel Showcase Slider
+        const showcaseImages = [
+            '{{ asset('images/rooms/room_201.jpg') }}',
+            '{{ asset('images/rooms/room_101.jpg') }}',
+            '{{ asset('images/rooms/room_202.jpg') }}'
+        ];
+        let currentShowcaseIdx = 0;
+        let showcaseTimer = null;
+
+        function updateShowcase(idx) {
+            currentShowcaseIdx = (idx + showcaseImages.length) % showcaseImages.length;
+            const bg = document.getElementById('showcase-bg');
+            if (bg) {
+                bg.style.backgroundImage = `url('${showcaseImages[currentShowcaseIdx]}')`;
+            }
+        }
+
+        function startShowcaseAutoplay() {
+            clearInterval(showcaseTimer);
+            showcaseTimer = setInterval(() => {
+                updateShowcase(currentShowcaseIdx + 1);
+            }, 6000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            startShowcaseAutoplay();
+
+            // Fitur 'Selalu ingat saya': otomatis mengisi email dari LocalStorage jika belum terisi
+            const emailInput = document.getElementById('email');
+            const rememberCheckbox = document.getElementById('remember');
+            const loginForm = document.querySelector('form');
+
+            if (emailInput && !emailInput.value) {
+                const savedEmail = localStorage.getItem('kosify_saved_email');
+                if (savedEmail) {
+                    emailInput.value = savedEmail;
+                    if (rememberCheckbox) rememberCheckbox.checked = true;
+                }
+            }
+
+            if (loginForm && emailInput && rememberCheckbox) {
+                loginForm.addEventListener('submit', () => {
+                    if (rememberCheckbox.checked) {
+                        localStorage.setItem('kosify_saved_email', emailInput.value.trim());
+                        localStorage.setItem('kosify_remember_active', '1');
+                    } else {
+                        localStorage.removeItem('kosify_saved_email');
+                        localStorage.removeItem('kosify_remember_active');
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

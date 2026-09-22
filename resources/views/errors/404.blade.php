@@ -32,8 +32,11 @@
         <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-500 to-slate-900"></div>
 
         <!-- 404 Badge & Icon -->
-        <div class="w-20 h-20 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-6 text-3xl font-black shadow-inner border border-amber-100">
-            🔍
+        <div class="w-20 h-20 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-6 shadow-inner border border-amber-100">
+            <svg class="w-9 h-9 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
         </div>
 
         <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase tracking-widest rounded-md mb-3">

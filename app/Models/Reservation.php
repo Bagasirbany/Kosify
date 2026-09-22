@@ -24,6 +24,8 @@ class Reservation extends Model
         'duration_months',
         'status',
         'total_price',
+        'extension_decision',
+        'extension_notes',
     ];
 
     public function user()

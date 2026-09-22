@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => 'bagasirbany',
                 'email' => 'bagasirbany@gmail.com',
-                'password' => Hash::make('bagasirbany0203'),
+                'password' => Hash::make('bagas123'),
                 'role' => 'admin',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -23,7 +23,7 @@ class AdminSeeder extends Seeder
             echo "Admin user created successfully!\n";
         } else {
             DB::table('users')->where('email', 'bagasirbany@gmail.com')->update([
-                'password' => Hash::make('bagasirbany0203'),
+                'password' => Hash::make('bagas123'),
                 'role' => 'admin',
             ]);
             echo "Admin user updated successfully!\n";

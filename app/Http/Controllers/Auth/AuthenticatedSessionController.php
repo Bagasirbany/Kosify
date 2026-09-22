@@ -29,6 +29,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Simpan preferensi 'Selalu ingat saya' & email pengguna selama 30 hari jika dicentang
+        if ($request->boolean('remember')) {
+            \Illuminate\Support\Facades\Cookie::queue('kosify_remember_email', $request->email, 60 * 24 * 30);
+            \Illuminate\Support\Facades\Cookie::queue('kosify_remember_active', '1', 60 * 24 * 30);
+        } else {
+            \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('kosify_remember_email'));
+            \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('kosify_remember_active'));
+        }
+
         if (Auth::user()->role === 'admin') {
             return redirect()->intended(RouteServiceProvider::HOME);
         }

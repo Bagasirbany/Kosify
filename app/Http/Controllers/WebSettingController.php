@@ -33,15 +33,12 @@ class WebSettingController extends Controller
         $fields = [
             'hero_title' => $request->hero_title,
             'hero_subtitle' => $request->hero_subtitle,
-            'hero_button_text' => $request->hero_button_text ?: 'Cari Kamarmu',
-            'owner_name' => $request->owner_name ?: 'H. Irbany Bagas, S.T.',
-            'owner_phone' => $request->owner_phone ?: '0812-3456-7890',
+            'company_address' => $request->company_address ?: 'Jl. Kaliurang KM 5.2 No. 18, Sleman, Yogyakarta',
+            'owner_name' => $request->owner_name ?: 'Bagas Irbany',
+            'owner_phone' => $request->owner_phone ?: '0858-1572-1534',
             'owner_email' => $request->owner_email ?: 'pengelola@kosify.id',
             'kos_address' => $request->kos_address ?: 'Jl. Kaliurang KM 5.2 No. 18, Caturtunggal, Sleman, D.I. Yogyakarta 55281',
             'announcement_banner' => $request->announcement_banner,
-            'midtrans_server_key' => $request->midtrans_server_key,
-            'midtrans_client_key' => $request->midtrans_client_key,
-            'midtrans_is_production' => $request->midtrans_is_production ? '1' : '0',
         ];
 
         foreach ($fields as $key => $value) {
@@ -55,6 +52,7 @@ class WebSettingController extends Controller
 
         // Clear settings cache immediately
         Cache::forget('web_settings_all');
+        Cache::forget('web_setting_owner_name');
 
         return redirect()->back()->with('success', 'Pengaturan Beranda & Informasi Kos berhasil disimpan!');
     }

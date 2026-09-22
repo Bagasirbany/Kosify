@@ -129,26 +129,26 @@
                     <!-- Metode Pembayaran -->
                     <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-xs">
                         <span class="text-[10px] font-black text-slate-400 tracking-widest uppercase mb-1 block">LANGKAH 02</span>
-                        <h2 class="text-xl font-black text-slate-900 mb-5">Pilihan Pembayaran</h2>
+                        <h2 class="text-xl font-black text-slate-900 mb-2">Metode Pembayaran</h2>
+                        <p class="text-xs text-slate-500 font-medium mb-4">Pembayaran reservasi kamar dilakukan melalui transfer bank resmi.</p>
 
-                        <div class="space-y-3">
-                            <label class="flex items-center gap-4 border-2 border-slate-900 bg-slate-50 rounded-2xl p-4 cursor-pointer">
-                                <input type="radio" name="payment_method" value="qris" checked form="booking-form" class="accent-slate-900 w-4 h-4">
-                                <div class="flex-1">
-                                    <p class="font-black text-slate-900 text-xs uppercase tracking-wide">QRIS / E-Wallet / Instant Midtrans</p>
-                                    <p class="text-slate-500 text-[11px] font-medium">OVO, GoPay, Dana, ShopeePay, Virtual Account Otomatis</p>
-                                </div>
-                                <span class="bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded">INSTAN</span>
-                            </label>
+                        <input type="hidden" name="payment_method" value="manual" form="booking-form">
 
-                            <label class="flex items-center gap-4 border border-slate-200 rounded-2xl p-4 cursor-pointer hover:bg-slate-50 transition">
-                                <input type="radio" name="payment_method" value="manual" form="booking-form" class="accent-slate-900 w-4 h-4">
-                                <div class="flex-1">
-                                    <p class="font-black text-slate-900 text-xs uppercase tracking-wide">Transfer Bank Manual (BCA / Mandiri / BRI)</p>
-                                    <p class="text-slate-500 text-[11px] font-medium">Upload bukti struk transfer setelah reservasi dibuat</p>
+                        <div class="border-2 border-slate-900 bg-slate-50 rounded-2xl p-4 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+                                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between gap-2 mb-1">
+                                    <p class="font-black text-slate-900 text-xs uppercase tracking-wide">Transfer Bank Resmi (BCA / Mandiri / BRI)</p>
+                                    <span class="bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded">VERIFIKASI RESMI</span>
                                 </div>
-                                <span class="bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded">MANUAL</span>
-                            </label>
+                                <p class="text-slate-600 text-xs font-medium leading-relaxed">
+                                    Nomor rekening resmi Kosify dan form unggah struk transfer akan langsung tersedia di menu <strong>Booking Saya</strong> setelah Anda menekan tombol konfirmasi.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,10 +187,10 @@
 
                             <button type="submit" form="booking-form"
                                     class="w-full bg-slate-900 hover:bg-black text-white font-black text-xs uppercase tracking-wider py-4 rounded-2xl shadow-md transition-all">
-                                KONFIRMASI & BAYAR SEKARANG &rarr;
+                                KONFIRMASI RESERVASI &rarr;
                             </button>
                             <p class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-wider mt-3">
-                                [ PROSES AMAN & TERENKRIPSI ]
+                                [ DATA AMAN & TERVERIFIKASI ]
                             </p>
                         </div>
                     </div>

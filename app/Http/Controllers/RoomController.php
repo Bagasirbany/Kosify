@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -12,23 +13,62 @@ class RoomController extends Controller
     // Public Catalog
     public function catalog(Request $request)
     {
-        $rooms = Room::with(['reservations', 'reviews'])->orderBy('room_number', 'asc')->get();
-        return view('catalog', compact('rooms'));
+        $rooms = Cache::remember('catalog_all_rooms', 120, function () {
+            return Room::with(['reservations', 'reviews'])->orderBy('room_number', 'asc')->get();
+        });
+        $ownerName = Cache::remember('owner_name_cache', 300, function () {
+            return \App\Models\WebSetting::where('key', 'owner_name')->value('value') ?: 'Bagas Irbany';
+        });
+        return view('catalog', compact('rooms', 'ownerName'));
     }
 
     // Public Detail
     public function show(Room $room)
     {
-        $room->load(['reservations', 'reviews.user']);
-        $averageRating = round($room->reviews()->avg('rating') ?: 5.0, 1);
-        $totalReviews = $room->reviews()->count();
-        $settings = \App\Models\WebSetting::pluck('value', 'key')->toArray();
-        return view('rooms.show', compact('room', 'averageRating', 'totalReviews', 'settings'));
+        $room->load([
+            'reservations',
+            'reviews' => function ($query) {
+                $query->with('user')->orderBy('created_at', 'desc');
+            }
+        ]);
+        $totalReviews = $room->reviews->count();
+        $averageRating = $totalReviews > 0 ? round($room->reviews->avg('rating'), 1) : null;
+        $settings = Cache::remember('web_settings_all', 300, function () {
+            return \App\Models\WebSetting::pluck('value', 'key')->toArray();
+        });
+
+        // Proteksi ketat:
+        // 1. Admin TIDAK BISA membuat ulasan (murni hanya bisa memantau/melihat)
+        // 2. Penyewa HANYA bisa mereview jika pernah memesan/menempati kamar ini dan belum pernah mengulas
+        $canReview = false;
+        $hasReviewed = false;
+
+        if (auth()->check()) {
+            if (auth()->user()->role !== 'admin') {
+                $hasBooked = \App\Models\Reservation::where('user_id', auth()->id())
+                    ->where('room_id', $room->id)
+                    ->whereIn('status', ['confirmed', 'active', 'completed', 'paid', 'success'])
+                    ->exists();
+
+                $hasReviewed = \App\Models\Review::where('user_id', auth()->id())
+                    ->where('room_id', $room->id)
+                    ->exists();
+
+                $canReview = $hasBooked && !$hasReviewed;
+            }
+        }
+
+        return view('rooms.show', compact('room', 'averageRating', 'totalReviews', 'settings', 'canReview', 'hasReviewed'));
     }
 
-    // User: Submit Review Kamar
+    // User: Submit Review Kamar (Hanya penyewa yang pernah memesan/menggunakan kamar)
     public function storeReview(Request $request, $room)
     {
+        // Admin tidak dapat memposting ulasan kamar
+        if (auth()->user()->role === 'admin') {
+            return back()->withErrors(['review' => 'Administrator tidak diizinkan membuat ulasan kamar. Hak ulasan khusus untuk penyewa.']);
+        }
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|min:3|max:1000',
@@ -37,17 +77,53 @@ class RoomController extends Controller
         $roomId = is_object($room) ? $room->id : $room;
         $targetRoom = Room::findOrFail($roomId);
 
-        \App\Models\Review::create([
+        // Validasi ketat: User harus terverifikasi pernah memesan kamar ini
+        $hasBooked = \App\Models\Reservation::where('user_id', auth()->id())
+            ->where('room_id', $targetRoom->id)
+            ->whereIn('status', ['confirmed', 'active', 'completed', 'paid', 'success'])
+            ->exists();
+
+        if (!$hasBooked) {
+            return back()->withErrors(['review' => 'Anda belum dapat memberikan ulasan. Ulasan hanya dapat diberikan oleh penyewa yang telah memesan atau menempati kamar ini.']);
+        }
+
+        // Cegah spam ulasan berulang kali
+        $alreadyReviewed = Review::where('user_id', auth()->id())
+            ->where('room_id', $targetRoom->id)
+            ->exists();
+
+        if ($alreadyReviewed) {
+            return back()->withErrors(['review' => 'Anda sudah pernah memberikan ulasan untuk kamar ini.']);
+        }
+
+        Review::create([
             'user_id' => auth()->id(),
             'room_id' => $targetRoom->id,
             'rating' => (int) $request->rating,
             'comment' => trim($request->comment),
         ]);
 
-        // Hapus cache agar dashboard langsung membaca rating terbaru
+        // Hapus cache agar katalog & dashboard langsung membaca rating terbaru
+        Cache::forget('catalog_all_rooms');
         Cache::forget('admin_dashboard_metrics');
+        Cache::forget('admin_dashboard_full_bundle');
 
-        return back()->with('success', 'Terima kasih! Ulasan dan rating Anda berhasil disimpan ke database.');
+        return back()->with('success', 'Terima kasih! Ulasan dan rating Anda berhasil disimpan.');
+    }
+
+    // User: Hapus Ulasan Milik Sendiri (Admin tidak bisa menghapus/mengotak-atik ulasan penyewa)
+    public function destroyReview(Review $review)
+    {
+        if (auth()->id() !== $review->user_id) {
+            abort(403, 'Ulasan bersifat independen dan hanya dapat dihapus oleh penyewa pembuat ulasan itu sendiri.');
+        }
+
+        $review->delete();
+        Cache::forget('catalog_all_rooms');
+        Cache::forget('admin_dashboard_metrics');
+        Cache::forget('admin_dashboard_full_bundle');
+
+        return back()->with('success', 'Ulasan Anda berhasil dihapus.');
     }
 
     // Admin Index
@@ -93,8 +169,10 @@ class RoomController extends Controller
         $room->id = Str::uuid()->toString();
         $room->save();
 
+        Cache::forget('catalog_all_rooms');
         Cache::forget('catalog_available_rooms');
         Cache::forget('home_popular_rooms');
+        Cache::forget('admin_dashboard_full_bundle');
 
         return redirect()->route('rooms.index')->with('success', 'Kamar berhasil ditambahkan.');
     }
@@ -129,8 +207,10 @@ class RoomController extends Controller
 
         $room->update($data);
 
+        Cache::forget('catalog_all_rooms');
         Cache::forget('catalog_available_rooms');
         Cache::forget('home_popular_rooms');
+        Cache::forget('admin_dashboard_full_bundle');
 
         return back()->with('success', 'Data kamar berhasil diupdate.');
     }
@@ -141,8 +221,10 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
         $room->delete();
 
+        Cache::forget('catalog_all_rooms');
         Cache::forget('catalog_available_rooms');
         Cache::forget('home_popular_rooms');
+        Cache::forget('admin_dashboard_full_bundle');
 
         return redirect()->route('rooms.index')->with('success', 'Kamar berhasil dihapus.');
     }

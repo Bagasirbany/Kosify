@@ -15,46 +15,44 @@
         <!-- MAIN TABLE CARD -->
         <div class="bg-white border border-slate-200 rounded-3xl shadow-xs overflow-hidden">
             
-            <div class="p-6 border-b border-slate-100 flex items-center justify-between flex-wrap gap-4">
-                <div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block">DATABASE PENYEWA</span>
-                    <h2 class="text-base font-black text-slate-900">Semua Penyewa Aktif ({{ count($tenants) }})</h2>
-                </div>
+            <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between flex-wrap gap-4">
+                <h2 class="text-base font-black text-slate-900">Semua Penyewa Aktif ({{ count($tenants) }})</h2>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-700">
-                    <thead class="bg-slate-50 text-slate-500 uppercase text-[10px] font-black tracking-wider border-b border-slate-200">
+                    <thead class="bg-slate-50/80 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
                         <tr>
-                            <th scope="col" class="px-6 py-4">NAMA LENGKAP</th>
-                            <th scope="col" class="px-6 py-4">KONTAK (EMAIL / TELEPON)</th>
-                            <th scope="col" class="px-6 py-4">PEKERJAAN / STATUS</th>
-                            <th scope="col" class="px-6 py-4">TERDAFTAR SEJAK</th>
-                            <th scope="col" class="px-6 py-4 text-right">AKSI</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Nama Lengkap</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Kontak (Email / Telepon)</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Pekerjaan / Status</th>
+                            <th scope="col" class="px-6 py-4 font-bold">Terdaftar Sejak</th>
+                            <th scope="col" class="px-6 py-4 text-right font-bold">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 font-medium">
                         @forelse ($tenants as $tenant)
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 font-black text-slate-900">
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4 font-bold text-slate-900">
                                 {{ $tenant->name }}
                             </td>
                             <td class="px-6 py-4">
-                                <div class="font-bold text-slate-800">{{ $tenant->email }}</div>
-                                <div class="text-[11px] text-slate-400 font-semibold">{{ $tenant->phone ?? '-' }}</div>
+                                <div class="font-semibold text-slate-800">{{ $tenant->email }}</div>
+                                <div class="text-[11px] text-slate-400 font-medium">{{ $tenant->phone ?? '-' }}</div>
                             </td>
-                            <td class="px-6 py-4 font-semibold uppercase text-slate-600">{{ $tenant->occupation ?? 'Penyewa' }}</td>
-                            <td class="px-6 py-4 font-semibold text-slate-800">{{ $tenant->created_at->format('d M Y') }}</td>
+                            <td class="px-6 py-4 font-medium text-slate-600">{{ $tenant->occupation ?? 'Penyewa' }}</td>
+                            <td class="px-6 py-4 font-medium text-slate-800">{{ $tenant->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4 text-right">
-                                <span class="px-3 py-1 bg-slate-100 text-slate-800 text-[10px] font-black uppercase tracking-wider rounded-lg border border-slate-200">
-                                    AKTIF
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-full whitespace-nowrap">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    Aktif
                                 </span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-slate-400 font-bold uppercase tracking-wider text-xs">
-                                Belum ada penyewa yang terdaftar.
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400 font-medium text-xs">
+                                Belum ada data penyewa yang terdaftar.
                             </td>
                         </tr>
                         @endforelse
@@ -62,7 +60,7 @@
                 </table>
             </div>
             
-            <div class="p-4 border-t border-slate-100 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-center">
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 text-xs font-medium text-slate-500 text-center">
                 Total: {{ count($tenants) }} Penyewa Terdata
             </div>
         </div>

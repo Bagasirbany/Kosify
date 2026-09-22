@@ -85,25 +85,6 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
         }
-
-        .arrow-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(255, 255, 255, 0.45);
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            transition: all 0.2s ease;
-        }
-        .arrow-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: #ffffff;
-            transform: scale(1.05);
-        }
     </style>
 </head>
 
@@ -112,45 +93,10 @@
     {{-- Main Container Card --}}
     <div class="w-full max-w-[980px] h-[94vh] max-h-[640px] bg-white rounded-[28px] shadow-2xl shadow-slate-300/70 border border-slate-200/60 flex overflow-hidden my-auto">
 
-        {{-- LEFT PANEL (46%) --}}
+        {{-- LEFT PANEL: Inset Photo Showcase (46%) --}}
         <div class="hidden lg:flex lg:w-[46%] p-3.5 flex-shrink-0">
-            <div class="w-full h-full rounded-[22px] overflow-hidden relative flex flex-col justify-between p-6 bg-cover bg-center shadow-inner"
-                 style="background-image: url('{{ asset('images/rooms/room_102.jpg') }}');">
-                
-                {{-- Overlay --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 z-0"></div>
-
-                {{-- Left Header Badge --}}
-                <div class="relative z-10 flex items-center">
-                    <span class="text-white font-bold text-xs tracking-wider uppercase bg-black/30 backdrop-blur-md border border-white/15 px-3 py-1 rounded-full">Pilihan Unggulan</span>
-                </div>
-
-                {{-- Left Bottom --}}
-                <div class="relative z-10 flex items-center justify-between">
-                    <div class="flex items-center gap-3 bg-black/40 backdrop-blur-md border border-white/20 rounded-full py-1.5 px-2.5 pr-4 shadow-lg">
-                        <div class="w-8 h-8 rounded-full overflow-hidden border border-white/50 flex-shrink-0">
-                            <img src="{{ asset('images/rooms/room_102.jpg') }}" class="w-full h-full object-cover" alt="Standard">
-                        </div>
-                        <div class="leading-tight">
-                            <p class="text-white font-bold text-xs">Kamar Standard Mahasiswa</p>
-                            <p class="text-white/70 text-[10.5px] font-medium">Kosify Comfort Living</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" class="arrow-btn" aria-label="Previous">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                        </button>
-                        <button type="button" class="arrow-btn" aria-label="Next">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
+            <div id="showcase-bg" class="w-full h-full rounded-[22px] overflow-hidden relative bg-cover bg-center shadow-inner transition-all duration-700"
+                 style="background-image: url('{{ asset('images/rooms/room_201.jpg') }}');">
             </div>
         </div>
 
@@ -178,7 +124,7 @@
                 {{-- Headings --}}
                 <div class="text-center mb-4">
                     <h1 class="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight leading-tight">
-                        Buat Akun Baru 🏡
+                        Buat Akun Baru
                     </h1>
                     <p class="text-slate-500 text-xs sm:text-sm font-medium mt-0.5">
                         Daftar akun untuk mulai reservasi kamar kos impian
@@ -298,6 +244,34 @@
             if (input.type === 'password') { input.type = 'text'; svg.innerHTML = off; }
             else { input.type = 'password'; svg.innerHTML = open; }
         }
+
+        // Left Panel Showcase Slider
+        const showcaseImages = [
+            '{{ asset('images/rooms/room_201.jpg') }}',
+            '{{ asset('images/rooms/room_101.jpg') }}',
+            '{{ asset('images/rooms/room_202.jpg') }}'
+        ];
+        let currentShowcaseIdx = 0;
+        let showcaseTimer = null;
+
+        function updateShowcase(idx) {
+            currentShowcaseIdx = (idx + showcaseImages.length) % showcaseImages.length;
+            const bg = document.getElementById('showcase-bg');
+            if (bg) {
+                bg.style.backgroundImage = `url('${showcaseImages[currentShowcaseIdx]}')`;
+            }
+        }
+
+        function startShowcaseAutoplay() {
+            clearInterval(showcaseTimer);
+            showcaseTimer = setInterval(() => {
+                updateShowcase(currentShowcaseIdx + 1);
+            }, 6000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            startShowcaseAutoplay();
+        });
     </script>
 </body>
 </html>

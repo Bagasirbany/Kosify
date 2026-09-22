@@ -32,8 +32,11 @@
         <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-500 to-slate-900"></div>
 
         <!-- 403 Badge & Icon -->
-        <div class="w-20 h-20 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-6 text-3xl font-black shadow-inner border border-red-100">
-            🔒
+        <div class="w-20 h-20 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-6 shadow-inner border border-red-100">
+            <svg class="w-9 h-9 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
         </div>
 
         <span class="inline-block px-3 py-1 bg-red-100 text-red-800 text-[11px] font-extrabold uppercase tracking-widest rounded-md mb-3">

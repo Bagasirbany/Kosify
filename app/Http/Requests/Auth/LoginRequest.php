@@ -42,7 +42,9 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         try {
-            if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            // Sesuai pilihan pengguna pada checkbox 'Selalu ingat saya'
+            $remember = $this->boolean('remember');
+            if (! Auth::attempt($this->only('email', 'password'), $remember)) {
                 RateLimiter::hit($this->throttleKey());
 
                 throw ValidationException::withMessages([

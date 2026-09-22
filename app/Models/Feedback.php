@@ -17,7 +17,7 @@ class Feedback extends Model
 
     protected $fillable = [
         'user_id',
-        'message',
+        'message'
     ];
 
     public function profile()

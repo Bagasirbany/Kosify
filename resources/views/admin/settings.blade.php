@@ -77,12 +77,12 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                         <label for="owner_name" class="block text-[10px] font-bold uppercase tracking-wider text-slate-700 mb-2">Nama Pemilik / Pengelola</label>
-                        <input type="text" name="owner_name" id="owner_name" value="{{ old('owner_name', $settings['owner_name'] ?? 'Bpk. Kosify Owner') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
+                        <input type="text" name="owner_name" id="owner_name" value="{{ old('owner_name', $settings['owner_name'] ?? 'Bagas Irbany') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
                     </div>
 
                     <div>
                         <label for="owner_phone" class="block text-[10px] font-bold uppercase tracking-wider text-slate-700 mb-2">Nomor WhatsApp / Telp</label>
-                        <input type="text" name="owner_phone" id="owner_phone" value="{{ old('owner_phone', $settings['owner_phone'] ?? '0812-3456-7890') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
+                        <input type="text" name="owner_phone" id="owner_phone" value="{{ old('owner_phone', $settings['owner_phone'] ?? '0858-1572-1534') }}" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-all">
                     </div>
 
                     <div>

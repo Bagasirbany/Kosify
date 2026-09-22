@@ -10,23 +10,33 @@ class FinanceController extends Controller
 {
     public function index()
     {
-        // Get latest 10 payments
-        $payments = Payment::with('reservation.user', 'reservation.room')
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
+        $data = \Illuminate\Support\Facades\Cache::remember('admin_finance_bundle', 300, function () {
+            // Get latest 10 payments
+            $payments = Payment::with(['reservation.user:id,name', 'reservation.room:id,room_number'])
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
 
-        // Get latest 10 expenses
-        $expenses = Expense::orderBy('expense_date', 'desc')
-            ->take(10)
-            ->get();
+            // Get latest 10 expenses
+            $expenses = Expense::orderBy('expense_date', 'desc')
+                ->take(10)
+                ->get();
 
-        // Total calculations
-        $totalPemasukan = Payment::whereIn('status', ['paid', 'verified', 'success'])->sum('amount');
-        $totalPengeluaran = Expense::sum('amount');
-        $saldoBersih = $totalPemasukan - $totalPengeluaran;
+            // Total calculations in single query
+            $totals = \Illuminate\Support\Facades\DB::selectOne("
+                SELECT
+                    (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE status IN ('paid', 'verified', 'success')) as total_pemasukan,
+                    (SELECT COALESCE(SUM(amount), 0) FROM expenses) as total_pengeluaran
+            ");
 
-        return view('finance', compact('payments', 'expenses', 'totalPemasukan', 'totalPengeluaran', 'saldoBersih'));
+            $totalPemasukan = (float) $totals->total_pemasukan;
+            $totalPengeluaran = (float) $totals->total_pengeluaran;
+            $saldoBersih = $totalPemasukan - $totalPengeluaran;
+
+            return compact('payments', 'expenses', 'totalPemasukan', 'totalPengeluaran', 'saldoBersih');
+        });
+
+        return view('finance', $data);
     }
 
     public function storeExpense(Request $request)
@@ -40,6 +50,9 @@ class FinanceController extends Controller
         ]);
 
         Expense::create($validated);
+
+        \Illuminate\Support\Facades\Cache::forget('admin_finance_bundle');
+        \Illuminate\Support\Facades\Cache::forget('admin_dashboard_full_bundle');
 
         return redirect()->route('finance.index')->with('success', 'Pengeluaran berhasil dicatat!');
     }

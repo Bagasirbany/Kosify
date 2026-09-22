@@ -10,10 +10,20 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Switch Bahasa (Multi-Language)
+Route::get('/lang/{locale}', function (\Illuminate\Http\Request $request, $locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session(['locale' => $locale]);
+        cookie()->queue(cookie()->forever('kosify_locale', $locale));
+    }
+    $referer = $request->headers->get('referer');
+    return $referer ? redirect($referer) : redirect()->route('home');
+})->name('lang.switch');
+
 // Halaman utama / Landing Page
 Route::get('/', function () {
     $popularRooms = \Illuminate\Support\Facades\Cache::remember('home_popular_rooms', 120, function () {
-        return \App\Models\Room::where('status', 'available')->latest()->take(4)->get();
+        return \App\Models\Room::with('reviews')->where('status', 'available')->latest()->take(4)->get();
     });
     $settings = \Illuminate\Support\Facades\Cache::remember('web_settings_all', 300, function () {
         return \App\Models\WebSetting::pluck('value', 'key')->toArray();
@@ -81,7 +91,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Admin: Kelola Booking
     Route::get('/booking', [ReservationController::class, 'adminIndex'])->name('bookings.index');
     Route::patch('/booking/{id}/status', [ReservationController::class, 'updateStatus'])->name('bookings.updateStatus');
-    Route::post('/booking/{id}/terminate', [ReservationController::class, 'terminateContract'])->name('bookings.terminate');
 
     // Admin: Keluhan & Kendala Fasilitas
     Route::get('/admin/complaints', [\App\Http\Controllers\ComplaintController::class, 'adminIndex'])->name('admin.complaints.index');
@@ -100,8 +109,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/complaints', [\App\Http\Controllers\ComplaintController::class, 'index'])->name('complaints.index');
     Route::post('/complaints', [\App\Http\Controllers\ComplaintController::class, 'store'])->name('complaints.store');
 
-    // User/Tenant: Submit Review Kamar
+    // User/Tenant: Submit & Delete Review Kamar
     Route::post('/rooms/{room}/review', [\App\Http\Controllers\RoomController::class, 'storeReview'])->name('rooms.review');
+    Route::delete('/reviews/{review}', [\App\Http\Controllers\RoomController::class, 'destroyReview'])->name('reviews.destroy');
 
     // User/Tenant: Checkout / Reservasi
     Route::get('/booking/{room}/checkout', [ReservationController::class, 'create'])->name('bookings.checkout');
@@ -130,9 +140,14 @@ Route::middleware('auth')->group(function () {
 
     // Manual Bank Transfer Confirmation Upload
     Route::post('/booking/{reservation}/manual-payment', [ReservationController::class, 'uploadManualPayment'])->name('bookings.manualPayment');
+
+    // Lease Extension, Termination & Cancellation
+    Route::post('/booking/{reservation}/extend', [ReservationController::class, 'extend'])->name('bookings.extend');
+    Route::post('/booking/{reservation}/terminate', [ReservationController::class, 'terminate'])->name('bookings.terminate');
+    Route::post('/booking/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('bookings.cancel');
 });
 
-// Midtrans Webhook Notification Handlers (Without Auth Middleware)
+// Payment Gateway Webhook Notification Handlers (Without Auth Middleware)
 Route::post('/payment/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook'])->name('payment.webhook');
 Route::post('/midtrans/callback', [\App\Http\Controllers\PaymentController::class, 'webhook']);
 Route::post('/api/midtrans-callback', [\App\Http\Controllers\PaymentController::class, 'webhook']);
