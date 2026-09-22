@@ -53,32 +53,13 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    // Admin Dashboard
+    // Admin & Pemilik: Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Manage Feedbacks
-    Route::get('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedbacks.index');
-    Route::delete('/feedbacks/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'destroy'])->name('feedbacks.destroy');
-
-    // Web Settings
-    Route::get('/settings', [\App\Http\Controllers\WebSettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [\App\Http\Controllers\WebSettingController::class, 'update'])->name('settings.update');
-
-    // Admin: Manajemen Penyewa
-    Route::get('/penyewa', [TenantController::class, 'index'])->name('tenants.index');
-    Route::post('/penyewa', [TenantController::class, 'store'])->name('tenants.store');
-
-    // Admin: Keuangan
-    Route::get('/keuangan', [FinanceController::class, 'index'])->name('finance.index');
-    Route::get('/finance', fn() => redirect()->route('finance.index'));
-    Route::post('/keuangan/pengeluaran', [FinanceController::class, 'storeExpense'])->name('finance.storeExpense');
-
-    // Admin: Laporan
-    Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
-
-    // Admin: Manajemen Kamar
+    // Admin & Pemilik: Manajemen Kamar
     Route::get('/kamar', [RoomController::class, 'adminIndex'])->name('rooms.index');
     Route::post('/kamar/sync-status', [RoomController::class, 'syncExpiredStatus'])->name('rooms.syncStatus');
     Route::get('/kamar/create', [RoomController::class, 'create'])->name('rooms.create');
@@ -88,16 +69,35 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/kamar/{id}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/kamar/{id}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 
-    // Admin: Kelola Booking
+    // Admin & Pemilik: Manajemen Penyewa
+    Route::get('/penyewa', [TenantController::class, 'index'])->name('tenants.index');
+    Route::post('/penyewa', [TenantController::class, 'store'])->name('tenants.store');
+
+    // Admin & Pemilik: Kelola Booking
     Route::get('/booking', [ReservationController::class, 'adminIndex'])->name('bookings.index');
     Route::patch('/booking/{id}/status', [ReservationController::class, 'updateStatus'])->name('bookings.updateStatus');
 
-    // Admin: Keluhan & Kendala Fasilitas
+    // Admin & Pemilik: Keluhan & Kendala Fasilitas
     Route::get('/admin/complaints', [\App\Http\Controllers\ComplaintController::class, 'adminIndex'])->name('admin.complaints.index');
     Route::patch('/admin/complaints/{id}', [\App\Http\Controllers\ComplaintController::class, 'adminUpdateStatus'])->name('admin.complaints.update');
 
-    // Admin: Export Keuangan CSV
-    Route::get('/keuangan/export-csv', [\App\Http\Controllers\FinanceController::class, 'exportCsv'])->name('finance.exportCsv');
+    // KHUSUS PEMILIK KOS: Keuangan & Laporan Bisnis
+    Route::middleware('admin:pemilik')->group(function () {
+        Route::get('/keuangan', [FinanceController::class, 'index'])->name('finance.index');
+        Route::get('/finance', fn() => redirect()->route('finance.index'));
+        Route::post('/keuangan/pengeluaran', [FinanceController::class, 'storeExpense'])->name('finance.storeExpense');
+        Route::get('/keuangan/export-csv', [\App\Http\Controllers\FinanceController::class, 'exportCsv'])->name('finance.exportCsv');
+        Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+    });
+
+    // KHUSUS ADMIN WEB (IT): Pengaturan Web & Manajemen Akun User
+    Route::middleware('admin:admin_web')->group(function () {
+        Route::get('/settings', [\App\Http\Controllers\WebSettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [\App\Http\Controllers\WebSettingController::class, 'update'])->name('settings.update');
+        Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::patch('/admin/users/{user}/role', [UserController::class, 'updateRole'])->name('admin.users.updateRole');
+        Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.resetPassword');
+    });
 });
 
 

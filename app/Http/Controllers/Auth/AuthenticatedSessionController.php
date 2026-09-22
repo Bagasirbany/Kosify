@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('kosify_remember_active'));
         }
 
-        if (Auth::user()->role === 'admin') {
+        if (in_array(Auth::user()->role, ['admin', 'admin_web', 'pemilik', 'owner'])) {
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 

@@ -10,23 +10,46 @@ class AdminSeeder extends Seeder
 {
     public function run()
     {
-        $exists = DB::table('users')->where('email', 'bagasirbany@gmail.com')->exists();
-        if (!$exists) {
+        // 1. Pemilik Kos (Owner)
+        $ownerExists = DB::table('users')->where('email', 'bagasirbany@gmail.com')->exists();
+        if (!$ownerExists) {
             DB::table('users')->insert([
-                'name' => 'bagasirbany',
+                'name' => 'Bagas Irbany (Pemilik Kos)',
                 'email' => 'bagasirbany@gmail.com',
                 'password' => Hash::make('bagas123'),
-                'role' => 'admin',
+                'role' => 'pemilik',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-            echo "Admin user created successfully!\n";
+            echo "Pemilik Kos (Bagas) created successfully!\n";
         } else {
             DB::table('users')->where('email', 'bagasirbany@gmail.com')->update([
+                'name' => 'Bagas Irbany (Pemilik Kos)',
                 'password' => Hash::make('bagas123'),
-                'role' => 'admin',
+                'role' => 'pemilik',
             ]);
-            echo "Admin user updated successfully!\n";
+            echo "Pemilik Kos (Bagas) updated successfully!\n";
+        }
+
+        // 2. Admin Web (Super Admin / IT)
+        $adminExists = DB::table('users')->where('email', 'admin@gmail.com')->exists();
+        if (!$adminExists) {
+            DB::table('users')->insert([
+                'name' => 'Admin Web (IT)',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('admin123'),
+                'role' => 'admin_web',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            echo "Admin Web (admin@gmail.com) created successfully!\n";
+        } else {
+            DB::table('users')->where('email', 'admin@gmail.com')->update([
+                'name' => 'Admin Web (IT)',
+                'password' => Hash::make('admin123'),
+                'role' => 'admin_web',
+            ]);
+            echo "Admin Web (admin@gmail.com) updated successfully!\n";
         }
     }
 }

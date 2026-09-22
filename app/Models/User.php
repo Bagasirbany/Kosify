@@ -43,4 +43,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isAdminWeb(): bool
+    {
+        return $this->role === 'admin_web';
+    }
+
+    public function isPemilik(): bool
+    {
+        return in_array($this->role, ['pemilik', 'owner', 'admin']);
+    }
+
+    public function isAnyAdmin(): bool
+    {
+        return in_array($this->role, ['admin', 'admin_web', 'pemilik', 'owner']);
+    }
 }

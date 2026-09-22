@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                if (Auth::user()->role === 'admin') {
+                if (in_array(Auth::user()->role, ['admin', 'admin_web', 'pemilik', 'owner'])) {
                     return redirect()->route('dashboard');
                 }
                 return redirect()->route('catalog.index');
