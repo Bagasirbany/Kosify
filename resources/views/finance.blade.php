@@ -37,13 +37,13 @@
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Operasional & Perawatan</p>
             </div>
 
-            <div class="bg-slate-900 border border-slate-900 rounded-3xl p-6 shadow-xs text-white">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">SALDO BERSIH (PROFIT)</span>
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-white/10 text-emerald-400 border border-white/20">BERSIH</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">BERSIH</span>
                 </div>
-                <h3 class="text-3xl font-black mb-1">Rp {{ number_format($saldoBersih, 0, ',', '.') }}</h3>
-                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pemasukan - Pengeluaran</p>
+                <h3 class="text-3xl font-black text-slate-900 mb-1">Rp {{ number_format($saldoBersih, 0, ',', '.') }}</h3>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Pemasukan – Pengeluaran</p>
             </div>
         </div>
 
