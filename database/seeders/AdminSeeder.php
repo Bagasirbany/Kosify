@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
         $ownerExists = DB::table('users')->where('email', 'bagasirbany@gmail.com')->exists();
         if (!$ownerExists) {
             DB::table('users')->insert([
-                'name' => 'Bagas Irbany (Pemilik Kos)',
+                'name' => 'Bagas Irbany',
                 'email' => 'bagasirbany@gmail.com',
                 'password' => Hash::make('bagas123'),
                 'role' => 'pemilik',
@@ -24,7 +24,7 @@ class AdminSeeder extends Seeder
             echo "Pemilik Kos (Bagas) created successfully!\n";
         } else {
             DB::table('users')->where('email', 'bagasirbany@gmail.com')->update([
-                'name' => 'Bagas Irbany (Pemilik Kos)',
+                'name' => 'Bagas Irbany',
                 'password' => Hash::make('bagas123'),
                 'role' => 'pemilik',
             ]);
@@ -35,7 +35,7 @@ class AdminSeeder extends Seeder
         $adminExists = DB::table('users')->where('email', 'admin@gmail.com')->exists();
         if (!$adminExists) {
             DB::table('users')->insert([
-                'name' => 'Admin Web (IT)',
+                'name' => 'Admin Web',
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin_web',
@@ -45,7 +45,7 @@ class AdminSeeder extends Seeder
             echo "Admin Web (admin@gmail.com) created successfully!\n";
         } else {
             DB::table('users')->where('email', 'admin@gmail.com')->update([
-                'name' => 'Admin Web (IT)',
+                'name' => 'Admin Web',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin_web',
             ]);

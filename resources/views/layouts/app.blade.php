@@ -117,9 +117,19 @@
                                 <div class="px-4 py-2.5 border-b border-slate-100">
                                     <p class="text-xs font-black text-slate-900 leading-none">{{ auth()->user()->name ?? 'Admin' }}</p>
                                     <p class="text-[10px] text-slate-400 font-medium mt-1 truncate">{{ auth()->user()->email ?? 'admin@kosify.id' }}</p>
-                                    <span class="inline-block mt-1.5 px-2 py-0.5 rounded text-[9px] font-black uppercase bg-slate-100 text-slate-700 border border-slate-200">
-                                        {{ auth()->user()->role ?? 'ADMIN' }}
-                                    </span>
+                                    @if(in_array(auth()->user()->role, ['pemilik', 'admin', 'owner']))
+                                        <span class="inline-block mt-2 px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            Pemilik Kos
+                                        </span>
+                                    @elseif(auth()->user()->role === 'admin_web')
+                                        <span class="inline-block mt-2 px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                            Admin Web (IT)
+                                        </span>
+                                    @else
+                                        <span class="inline-block mt-2 px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
+                                            Penyewa
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
