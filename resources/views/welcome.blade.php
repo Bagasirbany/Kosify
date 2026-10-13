@@ -277,4 +277,80 @@
             </div>
         </div>
     </section>
+
+    <!-- ============ TESTIMONIALS SECTION (PJBL VALIDATION) ============ -->
+    <section id="testimoni" class="py-20 px-6 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-xs font-black uppercase tracking-widest text-emerald-600 block mb-2">ULASAN & TESTIMONI</span>
+                <h2 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Apa Kata Mereka Tentang Kosify?</h2>
+                <p class="text-slate-500 text-sm font-medium mt-2">Dukungan dan pengalaman nyata dari para anak kos dan pemilik kos mitra kami.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Testimoni 1 -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="flex items-center gap-1 text-amber-400 mb-4">
+                            @for($i=0; $i<5; $i++)
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            @endfor
+                        </div>
+                        <p class="text-slate-700 text-sm leading-relaxed font-medium mb-6">
+                            "Sangat membantu anak rantau seperti saya. Dulu harus survei keliling kos panas-panasan, sekarang tinggal filter harga dan fasilitas langsung ketemu yang cocok. Ada invoice dan surat kontraknya juga!"
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <div class="w-10 h-10 rounded-full bg-slate-900 text-white font-black text-xs flex items-center justify-center">DP</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 leading-none">Dimas Prasetyo</h4>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Penyewa Kamar Standard</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimoni 2 -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="flex items-center gap-1 text-amber-400 mb-4">
+                            @for($i=0; $i<5; $i++)
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            @endfor
+                        </div>
+                        <p class="text-slate-700 text-sm leading-relaxed font-medium mb-6">
+                            "Fitur lapor kendalanya juara! Pas lampu kamar mandi mati, tinggal foto dan submit tiket komplain lewat web, siang harinya langsung diperbaiki tanpa perlu chat bolak-balik."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">AR</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 leading-none">Anisa Rahmawati</h4>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Penghuni Kamar Deluxe</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimoni 3 -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="flex items-center gap-1 text-amber-400 mb-4">
+                            @for($i=0; $i<5; $i++)
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            @endfor
+                        </div>
+                        <p class="text-slate-700 text-sm leading-relaxed font-medium mb-6">
+                            "Dulu pencatatan uang sewa dan tagihan WiFi masih pakai buku tulis manual. Semenjak pakai Kosify, pembukuan keuangan tercatat otomatis, saya bisa pantau laba bersih dan ekspor ke Excel."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <div class="w-10 h-10 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center">HS</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 leading-none">Bpk. H. Sukardi</h4>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Pemilik Kos Mitra</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </x-public-layout>

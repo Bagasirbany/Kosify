@@ -33,6 +33,7 @@
                     <li><a href="{{ route('catalog.index') }}" class="text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-slate-900/0 group-hover:bg-slate-900 transition-all duration-300"></span> Katalog Kamar</a></li>
                     <li><a href="{{ route('home') }}#keunggulan" class="text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-slate-900/0 group-hover:bg-slate-900 transition-all duration-300"></span> Keunggulan</a></li>
                     <li><a href="{{ route('home') }}#tentang-kami" class="text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-slate-900/0 group-hover:bg-slate-900 transition-all duration-300"></span> Tentang Kami</a></li>
+                    <li><a href="{{ route('home') }}#testimoni" class="text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-slate-900/0 group-hover:bg-slate-900 transition-all duration-300"></span> Testimoni</a></li>
                 </ul>
             </div>
 
