@@ -37,4 +37,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', 'http://127.0.0.1:8000/auth/google/callback'),
     ],
 
+    'whatsapp' => [
+        'url' => env('WHATSAPP_GATEWAY_URL', 'https://api.fonnte.com/send'),
+        'token' => env('WHATSAPP_GATEWAY_TOKEN'),
+        'admin_phone' => env('WHATSAPP_ADMIN_NUMBER', '085815721534'),
+    ],
+
 ];

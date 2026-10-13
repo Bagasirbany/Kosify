@@ -33,8 +33,45 @@ class PaymentController extends Controller
         }
         $suffix = substr($digitsOnly, -8);
 
+        // Integrasi Midtrans Snap API Resmi
+        $midtransToken = null;
+        try {
+            if (config('midtrans.server_key') && config('midtrans.server_key') !== 'SB-Mid-server-xxxx') {
+                \Midtrans\Config::$serverKey = config('midtrans.server_key');
+                \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
+                \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized', true);
+                \Midtrans\Config::$is3ds = config('midtrans.is_3ds', true);
+
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $orderId,
+                        'gross_amount' => (int) $reservation->total_price,
+                    ],
+                    'customer_details' => [
+                        'first_name' => $customerUser ? $customerUser->name : 'Penyewa',
+                        'email' => $customerUser ? $customerUser->email : 'penyewa@kosify.id',
+                        'phone' => $rawPhone,
+                    ],
+                    'item_details' => [
+                        [
+                            'id' => 'ROOM-' . ($reservation->room ? $reservation->room->room_number : '101'),
+                            'price' => (int) $reservation->total_price,
+                            'quantity' => 1,
+                            'name' => 'Sewa Kamar ' . ($reservation->room ? $reservation->room->room_number : '101') . ' (' . ($reservation->duration_months ?: 1) . ' Bulan)',
+                        ]
+                    ],
+                ];
+
+                $midtransToken = \Midtrans\Snap::getSnapToken($params);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Midtrans Snap SDK warning: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
+            'token' => $midtransToken,
+            'snap_token' => $midtransToken,
             'mode' => 'gateway',
             'reservation_id' => $reservation->id,
             'room_number' => $reservation->room ? $reservation->room->room_number : '101',
@@ -46,7 +83,7 @@ class PaymentController extends Controller
             'customer_email' => $customerUser ? $customerUser->email : 'penyewa@kosify.id',
             'customer_phone' => $rawPhone,
             'order_id' => $orderId,
-            'gateway_name' => 'Kosify Payment Gateway',
+            'gateway_name' => 'Midtrans Payment Gateway & Kosify Instant',
             'va_numbers' => [
                 'BCA' => '8808 ' . substr($suffix, 0, 4) . ' ' . substr($suffix, 4),
                 'Mandiri' => '8909 ' . substr($suffix, 0, 4) . ' ' . substr($suffix, 4),
@@ -93,7 +130,7 @@ class PaymentController extends Controller
                 'id' => (string) Str::uuid(),
                 'user_id' => $reservation->user_id,
                 'amount' => $reservation->total_price,
-                'payment_method' => $paymentMethod . ' (' . $transactionId . ')',
+                'payment_method' => mb_substr($paymentMethod . ' (' . $transactionId . ')', 0, 50),
                 'due_date' => now()->addDays(3),
                 'status' => 'paid',
                 'verified_at' => now(),
@@ -116,6 +153,13 @@ class PaymentController extends Controller
             }
         } catch (\Throwable $mailException) {
             \Illuminate\Support\Facades\Log::info('Email confirmation skipped: ' . $mailException->getMessage());
+        }
+
+        // Kirim notifikasi WhatsApp Gateway otomatis
+        try {
+            app(\App\Services\WhatsAppGatewayService::class)->sendPaymentVerifiedNotification($reservation);
+        } catch (\Throwable $waException) {
+            \Illuminate\Support\Facades\Log::info('WA Gateway notification skipped: ' . $waException->getMessage());
         }
 
         session()->flash('success', 'Pembayaran terverifikasi! Kamar ' . ($reservation->room ? $reservation->room->room_number : '') . ' Anda telah resmi aktif.');

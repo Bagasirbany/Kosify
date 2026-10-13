@@ -15,7 +15,17 @@ class Payment extends Model
     protected $keyType = 'string';
     public const UPDATED_AT = null;
 
+    protected static function booted()
+    {
+        static::creating(function ($payment) {
+            if (empty($payment->id)) {
+                $payment->id = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
+
     protected $fillable = [
+        'id',
         'reservation_id',
         'user_id',
         'amount',

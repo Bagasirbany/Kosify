@@ -127,27 +127,52 @@
                     </form>
 
                     <!-- Metode Pembayaran -->
-                    <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-xs">
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-xs" x-data="{ selectedMethod: 'gateway' }">
                         <span class="text-[10px] font-black text-slate-400 tracking-widest uppercase mb-1 block">LANGKAH 02</span>
                         <h2 class="text-xl font-black text-slate-900 mb-2">Metode Pembayaran</h2>
-                        <p class="text-xs text-slate-500 font-medium mb-4">Pembayaran reservasi kamar dilakukan melalui transfer bank resmi.</p>
+                        <p class="text-xs text-slate-500 font-medium mb-4">Pilih metode pembayaran yang paling nyaman untuk Anda:</p>
 
-                        <input type="hidden" name="payment_method" value="manual" form="booking-form">
+                        <input type="hidden" name="payment_method" :value="selectedMethod" form="booking-form">
 
-                        <div class="border-2 border-slate-900 bg-slate-50 rounded-2xl p-4 flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
-                                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between gap-2 mb-1">
-                                    <p class="font-black text-slate-900 text-xs uppercase tracking-wide">Transfer Bank Resmi (BCA / Mandiri / BRI)</p>
-                                    <span class="bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded">VERIFIKASI RESMI</span>
+                        <div class="space-y-3">
+                            <!-- Opsi 1: Payment Gateway Otomatis (Midtrans) -->
+                            <div @click="selectedMethod = 'gateway'" 
+                                 :class="selectedMethod === 'gateway' ? 'border-2 border-slate-900 bg-emerald-50/40 ring-2 ring-emerald-500/20' : 'border border-slate-200 bg-white hover:border-slate-300'"
+                                 class="rounded-2xl p-4 flex items-start gap-4 cursor-pointer transition-all">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
                                 </div>
-                                <p class="text-slate-600 text-xs font-medium leading-relaxed">
-                                    Nomor rekening resmi Kosify dan form unggah struk transfer akan langsung tersedia di menu <strong>Booking Saya</strong> setelah Anda menekan tombol konfirmasi.
-                                </p>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between gap-2 mb-1">
+                                        <p class="font-black text-slate-900 text-xs uppercase tracking-wide">Payment Gateway Otomatis (QRIS &amp; Virtual Account)</p>
+                                        <span class="bg-emerald-600 text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded shadow-2xs">INSTAN &amp; OTOMATIS</span>
+                                    </div>
+                                    <p class="text-slate-600 text-xs font-medium leading-relaxed">
+                                        Didukung Midtrans Payment Gateway. Pembayaran terverifikasi seketika via QRIS (GoPay, OVO, Dana) &amp; Virtual Account (BCA, Mandiri, BRI, BNI) tanpa perlu unggah struk manual.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Opsi 2: Transfer Bank Manual -->
+                            <div @click="selectedMethod = 'manual'" 
+                                 :class="selectedMethod === 'manual' ? 'border-2 border-slate-900 bg-slate-50 ring-2 ring-slate-900/10' : 'border border-slate-200 bg-white hover:border-slate-300'"
+                                 class="rounded-2xl p-4 flex items-start gap-4 cursor-pointer transition-all">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 mt-0.5 border border-slate-200">
+                                    <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between gap-2 mb-1">
+                                        <p class="font-black text-slate-900 text-xs uppercase tracking-wide">Transfer Bank Resmi (BCA / Mandiri / BRI)</p>
+                                        <span class="bg-slate-100 text-slate-700 border border-slate-300 text-[9px] font-black uppercase px-2.5 py-0.5 rounded">MANUAL</span>
+                                    </div>
+                                    <p class="text-slate-600 text-xs font-medium leading-relaxed">
+                                        Transfer konvensional langsung ke rekening pengelola kos dan unggah foto struk bukti bayar di portal reservasi.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

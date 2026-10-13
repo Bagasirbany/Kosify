@@ -51,7 +51,14 @@ class ComplaintController extends Controller
             $data['photo'] = $path;
         }
 
-        Complaint::create($data);
+        $complaint = Complaint::create($data);
+
+        // Notifikasi WhatsApp ke pengelola & penyewa
+        try {
+            app(\App\Services\WhatsAppGatewayService::class)->sendComplaintNotification($complaint);
+        } catch (\Throwable $waError) {
+            \Illuminate\Support\Facades\Log::warning('WA Gateway complaint notification skipped: ' . $waError->getMessage());
+        }
 
         return redirect()->route('complaints.index')->with('success', 'Laporan kendala berhasil dikirim! Tim pengelola akan segera menindaklanjuti.');
     }
@@ -90,6 +97,13 @@ class ComplaintController extends Controller
             'status' => $request->status,
             'admin_notes' => $request->admin_notes,
         ]);
+
+        // Kirim Notifikasi WhatsApp Gateway ke penghuni mengenai status terbaru
+        try {
+            app(\App\Services\WhatsAppGatewayService::class)->sendComplaintNotification($complaint);
+        } catch (\Throwable $waError) {
+            \Illuminate\Support\Facades\Log::warning('WA Gateway complaint status notification skipped: ' . $waError->getMessage());
+        }
 
         return back()->with('success', 'Status tiket kendala berhasil diperbarui.');
     }

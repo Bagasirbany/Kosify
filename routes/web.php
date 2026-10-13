@@ -81,6 +81,29 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/complaints', [\App\Http\Controllers\ComplaintController::class, 'adminIndex'])->name('admin.complaints.index');
     Route::patch('/admin/complaints/{id}', [\App\Http\Controllers\ComplaintController::class, 'adminUpdateStatus'])->name('admin.complaints.update');
 
+    // Admin & Pemilik: WhatsApp Gateway Manual / Auto Trigger
+    Route::post('/admin/whatsapp/send/{type}/{id}', function ($type, $id) {
+        $service = app(\App\Services\WhatsAppGatewayService::class);
+        if ($type === 'booking') {
+            $reservation = \App\Models\Reservation::findOrFail($id);
+            $result = $service->sendBookingCreatedNotification($reservation);
+        } elseif ($type === 'payment') {
+            $reservation = \App\Models\Reservation::findOrFail($id);
+            $result = $service->sendPaymentVerifiedNotification($reservation);
+        } elseif ($type === 'complaint') {
+            $complaint = \App\Models\Complaint::findOrFail($id);
+            $result = $service->sendComplaintNotification($complaint);
+        } else {
+            return back()->with('error', 'Tipe notifikasi tidak valid.');
+        }
+
+        if (request()->wantsJson()) {
+            return response()->json($result);
+        }
+
+        return back()->with('success', 'Notifikasi WhatsApp Gateway berhasil dikirimkan!');
+    })->name('admin.whatsapp.send');
+
     // KHUSUS PEMILIK KOS: Keuangan & Laporan Bisnis
     Route::middleware('admin:pemilik')->group(function () {
         Route::get('/keuangan', [FinanceController::class, 'index'])->name('finance.index');

@@ -46,6 +46,99 @@
                 },
                 formatRupiah(num) {
                     return 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
+                },
+                openGatewayModal: false,
+                gatewayLoading: false,
+                gatewayTab: 'qris',
+                gatewayCopiedVa: null,
+                isFinishingGateway: false,
+                gatewayData: {
+                    id: '',
+                    orderId: '',
+                    roomNumber: '',
+                    amountFormatted: '',
+                    amount: 0,
+                    snapToken: null,
+                    vaNumbers: {},
+                    qris: {}
+                },
+                async openGateway(bookingId) {
+                    this.gatewayLoading = true;
+                    try {
+                        const res = await fetch('/payment/token/' + bookingId, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            this.gatewayData.id = data.reservation_id;
+                            this.gatewayData.orderId = data.order_id;
+                            this.gatewayData.roomNumber = data.room_number;
+                            this.gatewayData.amountFormatted = data.formatted_amount;
+                            this.gatewayData.amount = data.amount;
+                            this.gatewayData.snapToken = data.token || data.snap_token;
+                            this.gatewayData.vaNumbers = data.va_numbers || {};
+                            this.gatewayData.qris = data.qris || {};
+
+                            this.openGatewayModal = true;
+                        } else {
+                            alert('Gagal membuat sesi pembayaran gateway.');
+                        }
+                    } catch (e) {
+                        console.error('Gateway error:', e);
+                        alert('Terjadi kendala saat membuka payment gateway.');
+                    } finally {
+                        this.gatewayLoading = false;
+                    }
+                },
+                payWithSnap() {
+                    if (this.gatewayData.snapToken && window.snap) {
+                        const self = this;
+                        window.snap.pay(this.gatewayData.snapToken, {
+                            onSuccess: function(result) {
+                                self.finishGatewayPayment(result.transaction_id || ('MID-' + Date.now()));
+                            },
+                            onPending: function(result) {
+                                window.location.reload();
+                            },
+                            onError: function(result) {
+                                alert('Pembayaran Midtrans gagal atau dibatalkan.');
+                            }
+                        });
+                    } else {
+                        alert('Pop-up Midtrans Snap sedang dalam mode simulasi instan.');
+                    }
+                },
+                async finishGatewayPayment(customTxId = null) {
+                    this.isFinishingGateway = true;
+                    try {
+                        const txId = customTxId || ('PG-' + Math.floor(100000 + Math.random() * 900000));
+                        const res = await fetch('/payment/finish/' + this.gatewayData.id, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                payment_method: 'Midtrans Payment Gateway (QRIS/VA)',
+                                transaction_id: txId
+                            })
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                            window.location.reload();
+                        } else {
+                            alert(result.error || 'Gagal menyelesaikan pembayaran.');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Terjadi kesalahan koneksi pembayaran.');
+                    } finally {
+                        this.isFinishingGateway = false;
+                    }
                 }
             }" 
             class="mb-8">
@@ -271,14 +364,25 @@
                                                 @endif
 
                                                 @if($booking->status === 'pending')
-                                                    <!-- Tombol Bayar Transfer & Upload Manual -->
+                                                    <!-- Tombol 1: Bayar Otomatis (Midtrans / QRIS / VA) -->
+                                                    <button id="btn-gateway-{{ $booking->id }}" 
+                                                            @click="openGateway('{{ $booking->id }}')" 
+                                                            :disabled="gatewayLoading"
+                                                            class="px-4 py-2 text-xs font-black uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-xs flex items-center gap-2 cursor-pointer group hover:scale-[1.02]">
+                                                        <svg class="w-3.5 h-3.5 text-emerald-200 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                        </svg>
+                                                        <span>BAYAR OTOMATIS (GATEWAY)</span>
+                                                    </button>
+
+                                                    <!-- Tombol 2: Bayar Transfer & Upload Manual -->
                                                     <button id="btn-manual-{{ $booking->id }}" 
                                                             @click="openManualModal = true; selectedBookingId = '{{ $booking->id }}'; selectedRoomNo = '{{ $booking->room->room_number }}'; selectedPrice = '{{ number_format($booking->total_price, 0, ',', '.') }}'" 
-                                                            class="px-4 py-2 text-xs font-black uppercase tracking-wider text-white bg-slate-900 rounded-xl hover:bg-black transition-colors shadow-xs flex items-center gap-2 cursor-pointer group">
-                                                        <svg class="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            class="px-4 py-2 text-xs font-black uppercase tracking-wider text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl transition-colors shadow-xs flex items-center gap-2 cursor-pointer group">
+                                                        <svg class="w-3.5 h-3.5 text-slate-600 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                                         </svg>
-                                                        <span>BAYAR VIA TRANSFER & UNGGAH STRUK</span>
+                                                        <span>TRANSFER MANUAL &amp; STRUK</span>
                                                     </button>
                                                 @elseif($booking->status === 'waiting_verification')
                                                     <span class="px-3 py-2 text-xs font-bold uppercase tracking-wider text-blue-800 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-1.5">
@@ -611,9 +715,184 @@
                     </div>
                 </div>
 
+                {{-- ============================================================== --}}
+                {{-- MODAL PAYMENT GATEWAY OTOMATIS (MIDTRANS SNAP / QRIS / VA)    --}}
+                {{-- ============================================================== --}}
+                <div x-show="openGatewayModal" 
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs" 
+                     style="display: none;">
+                    
+                    <div @click.away="openGatewayModal = false" class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-100 relative max-h-[92vh] overflow-y-auto">
+                        
+                        {{-- Close Button --}}
+                        <button type="button" @click="openGatewayModal = false" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        
+                        {{-- Header Modal --}}
+                        <div class="mb-5 pb-4 border-b border-slate-100 pr-10">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                                    MIDTRANS SNAP &amp; INSTANT GATEWAY
+                                </span>
+                            </div>
+                            <h3 class="text-xl font-black text-slate-900 tracking-tight">Gerbang Pembayaran Otomatis</h3>
+                            <p class="text-xs text-slate-500 font-medium mt-0.5">Selesaikan transaksi untuk unit <strong class="text-slate-900">Kamar <span x-text="gatewayData.roomNumber"></span></strong> (ID: #<span x-text="gatewayData.orderId"></span>)</p>
+                        </div>
+
+                        {{-- Total Amount Box --}}
+                        <div class="bg-emerald-950 text-white rounded-2xl p-4 mb-5 flex items-center justify-between shadow-xs">
+                            <div>
+                                <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-0.5">TOTAL TAGIHAN</span>
+                                <span class="text-2xl font-black tracking-tight" x-text="gatewayData.amountFormatted"></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] font-black uppercase tracking-widest bg-emerald-800/80 text-emerald-200 px-2.5 py-1 rounded-md border border-emerald-700 block">
+                                    VERIFIKASI REAL-TIME
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Tab Selector: QRIS vs Virtual Account --}}
+                        <div class="flex gap-2 p-1 bg-slate-100 rounded-xl mb-4">
+                            <button type="button" @click="gatewayTab = 'qris'" 
+                                    :class="gatewayTab === 'qris' ? 'bg-white text-slate-900 font-black shadow-xs' : 'text-slate-600 font-bold hover:text-slate-900'"
+                                    class="flex-1 py-2 text-xs rounded-lg uppercase tracking-wider transition-all flex items-center justify-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                                <span>QRIS (E-Wallet &amp; M-Banking)</span>
+                            </button>
+                            <button type="button" @click="gatewayTab = 'va'" 
+                                    :class="gatewayTab === 'va' ? 'bg-white text-slate-900 font-black shadow-xs' : 'text-slate-600 font-bold hover:text-slate-900'"
+                                    class="flex-1 py-2 text-xs rounded-lg uppercase tracking-wider transition-all flex items-center justify-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                <span>Virtual Account (VA)</span>
+                            </button>
+                        </div>
+
+                        {{-- Tab 1: QRIS Display --}}
+                        <div x-show="gatewayTab === 'qris'" class="space-y-4">
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center flex flex-col items-center">
+                                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs mb-3">
+                                    {{-- Simbol QRIS SVG --}}
+                                    <svg class="w-40 h-40 text-slate-900 mx-auto" viewBox="0 0 100 100" fill="currentColor">
+                                        <rect x="10" y="10" width="28" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="6"/>
+                                        <rect x="19" y="19" width="10" height="10" fill="currentColor"/>
+                                        <rect x="62" y="10" width="28" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="6"/>
+                                        <rect x="71" y="19" width="10" height="10" fill="currentColor"/>
+                                        <rect x="10" y="62" width="28" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="6"/>
+                                        <rect x="19" y="71" width="10" height="10" fill="currentColor"/>
+                                        <rect x="44" y="12" width="6" height="6"/>
+                                        <rect x="52" y="20" width="6" height="6"/>
+                                        <rect x="44" y="28" width="6" height="6"/>
+                                        <rect x="12" y="44" width="6" height="6"/>
+                                        <rect x="24" y="48" width="6" height="6"/>
+                                        <rect x="44" y="44" width="12" height="12"/>
+                                        <rect x="62" y="44" width="8" height="8"/>
+                                        <rect x="76" y="52" width="6" height="6"/>
+                                        <rect x="44" y="64" width="8" height="8"/>
+                                        <rect x="58" y="70" width="8" height="8"/>
+                                        <rect x="72" y="64" width="8" height="8"/>
+                                        <rect x="84" y="76" width="6" height="6"/>
+                                        <rect x="48" y="82" width="8" height="8"/>
+                                        <rect x="64" y="84" width="8" height="8"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xs font-black text-slate-900 tracking-wide block uppercase" x-text="gatewayData.qris.merchant_name || 'KOSIFY RESIDENCE INDONESIA'"></span>
+                                <span class="text-[10px] text-slate-500 font-mono mt-0.5 block" x-text="'NMID: ' + (gatewayData.qris.nmid || 'ID102498218990')"></span>
+                                <p class="text-[11px] text-slate-600 mt-2 font-medium max-w-xs leading-relaxed">
+                                    Buka aplikasi GoPay, OVO, Dana, LinkAja, ShopeePay, atau BCA/Mandiri Mobile lalu scan kode QR di atas.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Tab 2: Virtual Account Display --}}
+                        <div x-show="gatewayTab === 'va'" class="space-y-3">
+                            <template x-for="(vaNum, bank) in gatewayData.vaNumbers" :key="bank">
+                                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-12 text-center text-xs font-black px-2 py-1 bg-white border border-slate-200 rounded-lg text-slate-800" x-text="bank"></span>
+                                        <div>
+                                            <span class="text-[10px] text-slate-400 font-bold block uppercase" x-text="'Virtual Account ' + bank"></span>
+                                            <span class="text-xs font-black font-mono text-slate-900" x-text="vaNum"></span>
+                                        </div>
+                                    </div>
+                                    <button type="button" 
+                                            @click="navigator.clipboard.writeText(vaNum.replace(/\s+/g, '')); gatewayCopiedVa = bank; setTimeout(() => gatewayCopiedVa = null, 2000)" 
+                                            class="px-3 py-1 rounded-lg text-xs font-bold transition-all shrink-0"
+                                            :class="gatewayCopiedVa === bank ? 'bg-emerald-100 text-emerald-700 font-black' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'">
+                                        <span x-text="gatewayCopiedVa === bank ? 'Tersalin' : 'Salin'"></span>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+
+                        {{-- Action Buttons --}}
+                        <div class="pt-4 border-t border-slate-100 mt-5 space-y-2.5">
+                            {{-- Midtrans Snap Button (If token available) --}}
+                            <template x-if="gatewayData.snapToken">
+                                <button type="button" @click="payWithSnap()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                    <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                    <span>Buka Pop-up Resmi Midtrans Snap</span>
+                                </button>
+                            </template>
+
+                            {{-- Instant Simulation / Confirm Gateway Payment --}}
+                            <button type="button" 
+                                    @click="finishGatewayPayment()" 
+                                    :disabled="isFinishingGateway"
+                                    class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                <span x-show="!isFinishingGateway">SIMULASI BAYAR BERHASIL (SELESAIKAN TRANSAKSI) &rarr;</span>
+                                <span x-show="isFinishingGateway" class="flex items-center gap-2" style="display: none;">
+                                    <svg class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                    </svg>
+                                    <span>MEMVERIFIKASI SISTEM...</span>
+                                </span>
+                            </button>
+
+                            <button type="button" @click="openGatewayModal = false" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl transition-colors">
+                                Tutup
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+    <script>
+        window.payBooking = function(bookingId) {
+            const rootEl = document.querySelector('[x-data]');
+            if (rootEl && rootEl._x_dataStack && rootEl._x_dataStack[0]) {
+                rootEl._x_dataStack[0].openGateway(bookingId);
+            }
+        };
+    </script>
+
+    @if(session('auto_pay_gateway'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof window.payBooking === 'function') {
+                    window.payBooking('{{ session('auto_pay_gateway') }}');
+                }
+            }, 300);
+        });
+    </script>
+    @endif
 
     @if(session('auto_open_manual'))
     <script>

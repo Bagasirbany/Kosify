@@ -77,6 +77,19 @@ class ReservationController extends Controller
         \Illuminate\Support\Facades\Cache::forget('admin_dashboard_full_bundle');
         \Illuminate\Support\Facades\Cache::forget('admin_finance_bundle');
 
+        // Kirim Notifikasi Otomatis via WhatsApp Gateway
+        try {
+            app(\App\Services\WhatsAppGatewayService::class)->sendBookingCreatedNotification($reservation);
+        } catch (\Throwable $waError) {
+            \Illuminate\Support\Facades\Log::warning('WA Gateway notification error: ' . $waError->getMessage());
+        }
+
+        if ($request->input('payment_method') === 'gateway') {
+            return redirect()->route('bookings.my')
+                ->with('auto_pay_gateway', $reservation->id)
+                ->with('success', 'Reservasi berhasil dibuat! Membuka pembayaran instan Payment Gateway...');
+        }
+
         return redirect()->route('bookings.my')
             ->with('auto_open_manual', $reservation->id)
             ->with('success', 'Reservasi berhasil dibuat! Silakan lakukan transfer ke rekening pengelola dan unggah bukti transfer.');
@@ -107,6 +120,13 @@ class ReservationController extends Controller
                 'status' => 'paid',
                 'verified_at' => now(),
             ]);
+
+            // Kirim Notifikasi Sukses Pembayaran via WhatsApp Gateway
+            try {
+                app(\App\Services\WhatsAppGatewayService::class)->sendPaymentVerifiedNotification($reservation);
+            } catch (\Throwable $waError) {
+                \Illuminate\Support\Facades\Log::warning('WA Gateway payment confirmation skipped: ' . $waError->getMessage());
+            }
         }
 
         \Illuminate\Support\Facades\Cache::forget('admin_dashboard_full_bundle');
