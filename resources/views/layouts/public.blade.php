@@ -85,14 +85,16 @@
 
     <!-- ============ NAVBAR ============ -->
     <nav class="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-slate-200 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 h-20 relative flex items-center justify-between">
-            <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center z-10">
-                <img src="{{ asset('images/logo.png') }}?v=3" alt="Kosify Logo" class="h-12 w-auto object-contain">
-            </a>
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
+            <!-- Left: Logo -->
+            <div class="flex items-center justify-start flex-1">
+                <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
+                    <img src="{{ asset('images/logo.png') }}?v=3" alt="Kosify Logo" class="h-12 w-auto object-contain">
+                </a>
+            </div>
 
-            <!-- Center Links with Dynamic ScrollSpy Active Indicator (Simetris Sempurna) -->
-            <div class="hidden lg:flex items-center gap-8 text-xs font-black uppercase tracking-wider absolute inset-y-0 left-1/2 -translate-x-1/2">
+            <!-- Center Links with Dynamic ScrollSpy Active Indicator -->
+            <div class="hidden lg:flex items-center justify-center gap-8 text-xs font-black uppercase tracking-wider shrink-0">
                 <a href="{{ route('home') }}#beranda" 
                    @click="activeSection = 'beranda'"
                    :class="activeSection === 'beranda' ? 'text-slate-900 border-slate-900' : 'text-slate-400 hover:text-slate-700 border-transparent'"
@@ -114,7 +116,7 @@
             </div>
 
             <!-- Desktop Right Actions -->
-            <div class="hidden lg:flex items-center gap-3 justify-end z-10">
+            <div class="hidden lg:flex flex-1 items-center gap-3 justify-end shrink-0">
                 <!-- Direct Language Switcher (Segmented Button, No Dropdown) -->
                 <div class="flex items-center gap-0.5 bg-slate-100/90 p-1 rounded-full border border-slate-200 text-xs font-bold">
                     <span class="pl-1.5 pr-0.5 text-slate-400">
